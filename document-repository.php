@@ -61,6 +61,7 @@ class RA_Document_Post_Type {
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ), 20 );
+		add_action( 'admin_head_media_upload_type_form', array( &$this, 'media_upload_type_form' ) );
 		add_action( 'add_attachment', array( &$this, 'add_attachment' ) );
 		add_filter( 'pre_site_option_mu_media_buttons', array( &$this, 'media_buttons_filter' ) );
 		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs' ), 99 );
@@ -105,9 +106,10 @@ class RA_Document_Post_Type {
 		$content = ob_get_contents();
 		ob_clean();
 		$content .= '<ul class="ml-posts">';
+		$index = 0;
 		while( have_posts() ) {
 			the_post();
-			$content .= '<li class="ml-post"><h4>' . get_the_title() . ' <a href="' . get_permalink() . '" title="' . get_the_title() . '" onclick="ra_insert_document(this); return false;">' . __( 'Insert into Post', 'document-repository' ) . '</a></h4>';
+			$content .= '<li class="ml-post ' . ( 1 == ( $index++ % 2 ) ? 'alt' : '' ) . '"><h3>' . get_the_title() . ' <a href="' . get_permalink() . '" class="button" title="' . get_the_title() . '" onclick="ra_insert_document(this); return false;">' . __( 'Insert into Post', 'document-repository' ) . '</a></h3>';
 			$content .= '<div class="ml-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>';
 			$tags = get_the_terms( 0, 'post_tag' );
 			if( !empty( $tags ) ) {
@@ -175,6 +177,19 @@ class RA_Document_Post_Type {
 	}
 	function enqueue_scripts() {
 		wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), '0.2.0.12', true );
+	}
+	/*
+	hide the save all changes button
+	*/
+	function media_upload_type_form() {
+		$post_id = isset( $_REQUEST['post_id'] )? intval( $_REQUEST['post_id'] ) : 0;
+		if( !$post_id )
+			return;
+			
+		$post = get_post( $post_id );
+		if( $post->post_type == $this->post_type_name ) { ?>
+<style type="text/css">p.savebutton input#save { display:none; }</style>
+<?php		}
 	}
 	/*
 	remove all media buttons except the file one in the edit Document screen
