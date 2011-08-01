@@ -90,6 +90,9 @@ class RA_Document_Extras {
 #document-media-library span.doc-terms {
 	margin: 0 6px 6px 0;
 }
+#document-media-library .tablenav form {
+	display: inline;
+}
 </style>
 <script type="text/javascript" src="<?php echo plugin_dir_url( __FILE__ ) . 'js/media.js?ver=' . time(); ?>"></script>
 <?php	}
@@ -123,7 +126,7 @@ jQuery(document).ready(function() {
 			
 		var qs='';
 		if(el.type == 'submit') { 
-			jQuery('#searchform input, #searchform select').not('#searchsubmit').each(function(){
+			jQuery(el).parents('form:first').find(':input').not('#searchsubmit, .pagesubmit').each(function(){
 				if(this.value.length)
 					qs = qs + '&' + this.name + '=' + this.value; 
 			});

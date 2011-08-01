@@ -87,7 +87,7 @@ class RA_Document_Post_Type {
 
 		$vars = array( 'post_type' => $this->post_type_name );
 		if( isset( $_GET['mls'] ) && $_GET['mls'] == '1' ) {
-			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag' ) );
+			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag', 'page' ) );
 			foreach( (array)$query_vars as $var ) {
 				if( isset( $_GET[$var] ) )
 					$vars[$var] = $_GET[$var];  
@@ -102,23 +102,46 @@ class RA_Document_Post_Type {
 		the_widget( 'RA_Document_Widget_Search', $instance, $args );
 		$content = ob_get_contents();
 		ob_clean();
-		$content .= '<ul class="ml-posts">';
 		$index = 0;
-		while( have_posts() ) {
-			the_post();
-			$content .= '<li class="ml-post ' . ( 1 == ( $index++ % 2 ) ? 'alt' : '' ) . '"><h3>' . get_the_title() . ' <a href="' . get_permalink() . '" class="button" title="' . get_the_title() . '" onclick="ra_insert_document(this); return false;">' . __( 'Insert into Post', 'document-repository' ) . '</a></h3>';
-			$content .= '<div class="ml-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>';
-			$tags = get_the_terms( 0, 'post_tag' );
-			if( !empty( $tags ) ) {
-				$content .= '<strong>' . __( 'Tagged', 'document-repository' ) . '</strong>: ';
-				$tag_list = array();
-				foreach( $tags as $tag )
-					$tag_list[] = '<a href="#" class="' . esc_attr( $this->js_class ) . '" id="tag:' . $post->ID . '" name="' . esc_attr( $tag->slug ) . '">' . esc_html( $tag->name ) . '</a>';
-				$content .= implode( ', ', $tag_list );
+		if( have_posts() ) {
+			$paging = '';
+			if( $wp_query->post_count < $wp_query->found_posts ) {
+				$page = empty( $vars['page'] ) ? 1 : (int)$vars['page'];
+				unset( $vars['page'] );
+				unset( $vars['post_type'] );
+				$form = '<form><input type="hidden" name="page" value="%d" /><input type="submit" class="media-library-search pagesubmit" value="%s" />%s</form>';
+				$inputs = '';
+				foreach( $vars as $k => $v )
+					$inputs .= '<input type="hidden" name="' . esc_attr( $k ) . '" value="' . esc_attr( $v ) . '" />';
+					
+				if( $page > 1 )
+					$paging .= sprintf( $form, $page - 1, esc_attr( __( 'Previous Page', 'document-repository' ) ), $inputs );
+				if( $page < $wp_query->max_num_pages )
+					$paging .= sprintf( $form, $page + 1, esc_attr( __( 'Next Page', 'document-repository' ) ), $inputs );
+				if( $paging )
+					$paging = '<div class="tablenav">' . $paging . '</div>';
+					
+				$content .= $paging;
 			}
-			$content .= '</li>';
+			$content .= '<ul class="ml-posts">';
+			while( have_posts() ) {
+				the_post();
+				$content .= '<li class="ml-post ' . ( 1 == ( $index++ % 2 ) ? 'alt' : '' ) . '"><h3>' . get_the_title() . ' <a href="' . get_permalink() . '" class="button" title="' . get_the_title() . '" onclick="ra_insert_document(this); return false;">' . __( 'Insert into Post', 'document-repository' ) . '</a></h3>';
+				$content .= '<div class="ml-content">' . apply_filters( 'the_content', get_the_content() ) . '</div>';
+				$tags = get_the_terms( 0, 'post_tag' );
+				if( !empty( $tags ) ) {
+					$content .= '<strong>' . __( 'Tagged', 'document-repository' ) . '</strong>: ';
+					$tag_list = array();
+					foreach( $tags as $tag )
+						$tag_list[] = '<a href="#" class="' . esc_attr( $this->js_class ) . '" id="tag:' . $post->ID . '" name="' . esc_attr( $tag->slug ) . '">' . esc_html( $tag->name ) . '</a>';
+					$content .= implode( ', ', $tag_list );
+				}
+				$content .= '</li>';
+			}
+			$content .= '</ul>' . $paging;
+		} else {
+			$content .= '<h3>' . __( 'No Documents matched the search criteria', 'document-repository' ) . '</h3>';
 		}
-		$content .= '</ul>';
 		echo json_encode( $content ); exit;
 	}
 	/*
