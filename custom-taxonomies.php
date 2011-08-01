@@ -132,17 +132,19 @@ class RA_Document_Taxonomies {
 	add custom taxonomies to the search widget
 	*/
 	function document_search_widget() {
-		global $ra_document_library;
+		global $ra_document_library, $wp_query;
+
 		foreach( array( 'audience', 'division', 'process' ) as $tax ) {
 			$terms = get_terms( $tax );
 			if( empty( $terms ) )
 				continue;
-				
+
+			$current = !empty( $wp_query->query_vars[$tax] ) ? $wp_query->query_vars[$tax] : '';				
 			$taxonomy = get_taxonomy( $tax );
 			$output = "<select name='$tax' id='$tax' class='doc-lib-taxonomy'>\n";
-			$output .= "\t<option value='' selected='selected'>{$taxonomy->labels->name}</option>\n";
+			$output .= '\t<option value="" ' . selected( $current == '', true, false ) . ">{$taxonomy->labels->name}</option>\n";
 			foreach( $terms as $term ) 
-				$output .= "\t<option value='{$term->slug}'>{$term->name}</option>\n";
+				$output .= "\t<option value='{$term->slug}' " . selected( $current, $term->slug, false ) . ">{$term->name}</option>\n";
 							
 			echo $output . '</select><br />';
 		}

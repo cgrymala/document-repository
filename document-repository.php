@@ -85,7 +85,7 @@ class RA_Document_Post_Type {
 		if( $domain )
 			header( 'Access-Control-Allow-Origin: http://' . $domain );
 
-		$vars = array();
+		$vars = array( 'post_type' => $this->post_type_name );
 		if( isset( $_GET['mls'] ) && $_GET['mls'] == '1' ) {
 			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag' ) );
 			foreach( (array)$query_vars as $var ) {
@@ -93,10 +93,7 @@ class RA_Document_Post_Type {
 					$vars[$var] = $_GET[$var];  
 			}
 		}
-		if( !empty( $vars ) )
-			$wp_query = new WP_Query( $vars );
-		else
-			$wp_query = new WP_Query( array( 'post_type' => $this->post_type_name ) );
+		$wp_query = new WP_Query( $vars );
 
 		ob_start();
 		$this->js_class = 'media-library-search';
@@ -196,9 +193,9 @@ class RA_Document_Post_Type {
 	*/	
 	function media_buttons_filter( $setting ) {
 		global $post_type;
-		if( $post_type == $this->post_type_name ) {
+		if( $post_type == $this->post_type_name )
 			return array();
-		}		
+		
 		return $setting;
 	}
 	function media_upload_tabs( $tabs ) {
@@ -215,11 +212,15 @@ class RA_Document_Post_Type {
 	*/
 	function add_attachment( $post_id ) {
 		global $wpdb;
-		
+
 		$post = get_post( $post_id );
 		if( $post->post_parent < 1 )
 			return;
-	
+
+		$post_parent = get_post( $post->post_parent );
+		if( $post_parent->post_type != $this->post_type_name )
+			return;
+
 		$attachments = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'document_file' and post_parent = %d", $post->post_parent ) );
 		if( !empty( $attachments ) ) {
 			$revision = wp_save_post_revision( $post->post_parent );
@@ -524,12 +525,13 @@ class RA_Document_Widget_Search extends WP_Widget {
 	}
 
 	function widget( $args, $instance ) {
-		global $ra_document_library;
-		
+		global $ra_document_library, $wp_query;
+
 		$label_class = 'screen-reader-text';
 		$primary_class = $extras_class = $js_class = '';
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
+		$tags = !empty( $wp_query->query_vars['tag'] ) ? esc_attr( $wp_query->query_vars['tag'] ) : ''; 
 
 		echo $before_widget;
 		if ( $title )
@@ -539,7 +541,7 @@ class RA_Document_Widget_Search extends WP_Widget {
 	<div><div class="' . esc_attr( $primary_class ) . '"><label class="' . esc_attr( $label_class ) . '" for="s">' . __( 'Search for:', 'document-repository' ) . '</label>
 	<input type="text" value="' . get_search_query() . '" name="s" id="s" /><br />
 	<label class="' . $label_class . '" for="tag">' . __( 'Tags:', 'document-repository' ) . '</label>
-	<input type="text" value="" name="tag" id="tag" /><br /></div>';
+	<input type="text" value="' . $tags . '" name="tag" id="tag" /><br /></div>';
 		echo '<div class="' . esc_attr( $extras_class ) .'">';
 		do_action( 'document_search_widget', $js_class );
 		echo '</div><input type="submit" id="searchsubmit" class="' . esc_attr( $js_class ) . '" value="'. esc_attr__( 'Search Documents', 'document-repository' ) .'" />
