@@ -3,13 +3,13 @@ Contributors: wpmuguru
 Tags: custom, post, revision, media
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 
 Turn a WordPress site into a revisioned document repository.
 
 == Description ==
 
-*Currently in alpha* - it works but there are a few more things to be added before release.
+*Currently in beta* - it works but needs some testing, a few tweaks and translation support before release.
 
 The document repository is designed to provide a central revisioned repository for documents in WordPress network being implemented as a content management system. However, it can be used in single WP sites and supports cross domain implementation via JSON.
 
@@ -33,10 +33,13 @@ This plugin was written by [Ron Rennick](http://ronandandrea.com/) in collaborat
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. In a WordPress network add the repository site URL to your wp-config.php
 `define( 'RA_DOCUMENT_REPO_URL', 'http://domain.com' );`
-1. If using the Extras plugin in a WordPress network add the repository blog ID to your wp-config.php
+1. If using the Extras plugin in a WordPress network, network activate it and add the repository blog ID to your wp-config.php
 `define( 'RA_DOCUMENT_REPO_BLOG_ID', 1 );`
 
 == Changelog ==
+
+= 0.2.2 =
+* Rounded out feature set to beta.
 
 = 0.2.1 =
 * Original version.
