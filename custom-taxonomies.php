@@ -4,7 +4,7 @@ Plugin Name: Document Repository Custom Taxonomies
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Optional Custom Taxonomies for the document repository
 Author: Ron Rennick
-Version: 0.2.2
+Version: 0.2.3
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
