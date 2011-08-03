@@ -251,7 +251,8 @@ class RA_Document_Post_Type {
 			}
 		}
 		$wpdb->update( $wpdb->posts, array( 'post_type' => 'document_file' ), array( 'ID' => $post_id ) );
-		// need to hide the Save All button
+		$wpdb->update( $wpdb->posts, array( 'post_modified' => current_time( 'mysql' ), 'post_modified_gmt' => current_time( 'mysql', 1 ) ), array( 'ID' => $post->post_parent ) );
+
 		printf( '<a href="#" onclick="ra_close_media(); return false;">%s</a>', __( 'Finished.', 'document-repository' ) );
 		exit;
 	}
