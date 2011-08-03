@@ -25,7 +25,8 @@ This plugin is a collaboration project with contributions from University of Mar
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-//@todo add .po file / text domains
+if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3' );
 
 class RA_Document_Post_Type {
 	var $post_type_name = 'umw_document';
@@ -70,7 +71,7 @@ class RA_Document_Post_Type {
 		add_action( 'delete_post', array( &$this, 'delete_post' ) );
 		add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
 		
-//		load_plugin_textdomain( 'document-repository', false, '/languages/' );
+		load_plugin_textdomain( 'document-repository', false, '/languages/' );
 		
 	}
 	/*
@@ -193,7 +194,7 @@ class RA_Document_Post_Type {
 			$this->enqueue_scripts();		
 	}
 	function enqueue_scripts() {
-		wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), '0.2.3', true );
+		wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
 	}
 	/*
 	hide the save all changes button
@@ -374,7 +375,7 @@ class RA_Document_Post_Type {
 		$titlef = _x( '%1$s by %2$s', 'post revision' );
 		$revisions = wp_get_post_revisions( $post->ID );
 		krsort( $revisions );
-				
+
 		echo '<ul>';
 		$current = null;
 		if( ( $version = count( $this->attachments ) ) ) {
@@ -459,7 +460,7 @@ class RA_Document_Post_Type {
 			}
 			$revision = 0;
 			if( preg_match( '|[0-9]+\-revision\-([0-9]+)|', $v->post_name, $m ) )
-				$revision = $m[1];
+				$revision = 100000000 + $m[1]; //more than 99,999,999 revisions of a document will have an issue
 	
 			$documents[$revision] = $v; 
 		}

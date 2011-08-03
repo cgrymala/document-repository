@@ -120,7 +120,7 @@ class RA_Document_User_Roles {
 			foreach( $roles as $id => $role ) {
 				echo '<tr><td>' . $id . '</td><td><input type="text" name="doc_role[' . $id . ']" value="' . esc_attr( $role ) . '" />';
 				echo '<input type="hidden" name="original_doc_role[' . $id . ']" value="' . esc_attr( $role ) . '" /></td>';
-				printf( '<td><a href="%s">%s<a></td></tr>', wp_nonce_url( add_query_arg( array( 'delete_role' => $id ) ), 'delete' . $id ), __( 'Delete' ) );
+				printf( '<td><a href="%s">%s<a></td></tr>', wp_nonce_url( add_query_arg( array( 'delete_role' => $id ) ), 'delete' . $id ), __( 'Delete', 'document-repository' ) );
 			}
 		}
 				?></tbody></table>

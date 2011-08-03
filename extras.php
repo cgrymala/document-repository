@@ -27,13 +27,23 @@ This plugin is a collaboration project with contributions from University of Mar
 */
 if( !defined( 'RA_DOCUMENT_REPO_URL' ) )
 	define( 'RA_DOCUMENT_REPO_URL', '' );
+if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3' );
 
+add_action( 'plugins_loaded', array( 'RA_Document_Extras', 'plugins_loaded' ) );
 add_action( 'admin_bar_menu', array( 'RA_Document_Extras', 'admin_bar_menu' ), 100 );
 add_action( 'admin_head_ra_media_document_callback', array( 'RA_Document_Extras', 'admin_head_document' ), 99 );
 add_action( 'media_upload_document', array( 'RA_Document_Extras', 'media_upload_document' ) );
 add_filter( 'media_buttons_context', array( 'RA_Document_Extras', 'media_buttons_context' ) );
 
 class RA_Document_Extras {
+	/*
+	load text domain
+	*/
+	function plugins_loaded() {
+		if( !class_exists( 'RA_Document_Post_Type' ) )
+			load_plugin_textdomain( 'document-repository', false, '/languages/' );
+	}
 	/*
 	add the admin bar menu item
 	*/
@@ -47,7 +57,7 @@ class RA_Document_Extras {
 		if( !$user->doc_role && ( !defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || !current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) && !current_user_can( 'manage_options' ) )
 			return;
 
-		$wp_admin_bar->add_menu( array( 'id' => 'umw', 'title' => __( 'Document Admin' ), 'href' => RA_DOCUMENT_REPO_URL . '/wp-admin/edit.php?post_type=umw_document' ) );
+		$wp_admin_bar->add_menu( array( 'id' => 'umw', 'title' => __( 'Document Admin', 'document-repository' ), 'href' => RA_DOCUMENT_REPO_URL . '/wp-admin/edit.php?post_type=umw_document' ) );
 	}
 	/*
 	load the front end of the document repository in the edit post media popup to allow inserting links to documents into posts
@@ -64,7 +74,7 @@ class RA_Document_Extras {
 		if( $post_type == 'umw_document' )
 			return $context;
 		
-		$media_button = preg_replace( '|^(.*src=[\'"])' . admin_url( '/') . '(.*)$|', ' $1$2', _media_button( __( 'Insert Document' ), plugin_dir_url( __FILE__ ) . 'images/doc.jpg', 'document' ) );
+		$media_button = preg_replace( '|^(.*src=[\'"])' . admin_url( '/') . '(.*)$|', ' $1$2', _media_button( __( 'Insert Document', 'document-repository' ), plugin_dir_url( __FILE__ ) . 'images/doc.jpg', 'document' ) );
 		return $context . $media_button;
 	}
 	function admin_head_document() { ?>
@@ -94,7 +104,7 @@ class RA_Document_Extras {
 	display: inline;
 }
 </style>
-<script type="text/javascript" src="<?php echo plugin_dir_url( __FILE__ ) . 'js/media.js?ver=' . time(); ?>"></script>
+<script type="text/javascript" src="<?php echo plugin_dir_url( __FILE__ ) . 'js/media.js?ver=' . RA_DOCUMENT_REPO_VERSION; ?>"></script>
 <?php	}
 }
 /*

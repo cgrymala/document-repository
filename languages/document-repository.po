@@ -1,0 +1,331 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-08-02 21:02-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: custom-taxonomies.php:44
+msgid "Search Audiences"
+msgstr ""
+
+#: custom-taxonomies.php:45
+msgid "All Audiences"
+msgstr ""
+
+#: custom-taxonomies.php:46
+msgid "Parent Audience"
+msgstr ""
+
+#: custom-taxonomies.php:47
+msgid "Parent Audience:"
+msgstr ""
+
+#: custom-taxonomies.php:48
+msgid "Edit Audience"
+msgstr ""
+
+#: custom-taxonomies.php:49
+msgid "Update Audience"
+msgstr ""
+
+#: custom-taxonomies.php:50
+msgid "Add New Audience"
+msgstr ""
+
+#: custom-taxonomies.php:51
+msgid "New Audience Name"
+msgstr ""
+
+#: custom-taxonomies.php:56
+msgid "Search Divisions"
+msgstr ""
+
+#: custom-taxonomies.php:57
+msgid "All Divisions"
+msgstr ""
+
+#: custom-taxonomies.php:58
+msgid "Parent Division"
+msgstr ""
+
+#: custom-taxonomies.php:59
+msgid "Parent Division:"
+msgstr ""
+
+#: custom-taxonomies.php:60
+msgid "Edit Division"
+msgstr ""
+
+#: custom-taxonomies.php:61
+msgid "Update Division"
+msgstr ""
+
+#: custom-taxonomies.php:62
+msgid "Add New Division"
+msgstr ""
+
+#: custom-taxonomies.php:63
+msgid "New Division Name"
+msgstr ""
+
+#: custom-taxonomies.php:68
+msgid "Search Business Processes"
+msgstr ""
+
+#: custom-taxonomies.php:69
+msgid "All Business Processes"
+msgstr ""
+
+#: custom-taxonomies.php:70
+msgid "Parent Business Process"
+msgstr ""
+
+#: custom-taxonomies.php:71
+msgid "Parent Business Process:"
+msgstr ""
+
+#: custom-taxonomies.php:72
+msgid "Edit Business Process"
+msgstr ""
+
+#: custom-taxonomies.php:73
+msgid "Update Business Process"
+msgstr ""
+
+#: custom-taxonomies.php:74
+msgid "Add New Business Process"
+msgstr ""
+
+#: custom-taxonomies.php:75
+msgid "New Business Process Name"
+msgstr ""
+
+#: custom-taxonomies.php:127
+msgid ""
+"All published documents require an audience, division and business process."
+msgstr ""
+
+#: document-repository.php:101 document-repository.php:167
+msgid "Search Documents"
+msgstr ""
+
+#: document-repository.php:118
+msgid "Previous Page"
+msgstr ""
+
+#: document-repository.php:120
+msgid "Next Page"
+msgstr ""
+
+#: document-repository.php:129
+msgid "Insert into Post"
+msgstr ""
+
+#: document-repository.php:133
+msgid "Tagged"
+msgstr ""
+
+#: document-repository.php:143
+msgid "No Documents matched the search criteria"
+msgstr ""
+
+#: document-repository.php:157 document-repository.php:158
+msgid "Documents"
+msgstr ""
+
+#: document-repository.php:159
+msgid "Document"
+msgstr ""
+
+#: document-repository.php:160
+msgid "Add New"
+msgstr ""
+
+#: document-repository.php:161
+msgid "Add New Document"
+msgstr ""
+
+#: document-repository.php:162
+msgid "Edit"
+msgstr ""
+
+#: document-repository.php:163
+msgid "Edit Document"
+msgstr ""
+
+#: document-repository.php:164
+msgid "New Document"
+msgstr ""
+
+#: document-repository.php:165 document-repository.php:166
+msgid "View Document"
+msgstr ""
+
+#: document-repository.php:168
+msgid "No documents found"
+msgstr ""
+
+#: document-repository.php:169
+msgid "No documents found in Trash"
+msgstr ""
+
+#: document-repository.php:170
+msgid "Parent Document"
+msgstr ""
+
+#: document-repository.php:254
+msgid "Finished."
+msgstr ""
+
+#: document-repository.php:364
+msgid "Document Versions"
+msgstr ""
+
+#: document-repository.php:384
+#, php-format
+msgid "<li>%s / Current Version: %d - <a href=\"%s\">%s</a></li>"
+msgstr ""
+
+#: document-repository.php:399
+#, php-format
+msgid ""
+" / Version: %d - <a href=\"%s\">Make document current</a> - <a href=\"%s\">%"
+"s</a></li>"
+msgstr ""
+
+#: document-repository.php:474
+#, php-format
+msgid "Document updated. <a href=\"%s\">View document</a>"
+msgstr ""
+
+#: document-repository.php:475
+msgid "Document updated."
+msgstr ""
+
+#: document-repository.php:476
+#, php-format
+msgid "Document restored to revision from %s"
+msgstr ""
+
+#: document-repository.php:477
+#, php-format
+msgid "Document published. <a href=\"%s\">View document</a>"
+msgstr ""
+
+#: document-repository.php:478
+msgid "Document saved."
+msgstr ""
+
+#: document-repository.php:479
+#, php-format
+msgid ""
+"Document submitted. <a target=\"_blank\" href=\"%s\">Preview document</a>"
+msgstr ""
+
+#: document-repository.php:480
+#, php-format
+msgid ""
+"Document scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2"
+"$s\">Preview document</a>"
+msgstr ""
+
+#: document-repository.php:481
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#: document-repository.php:482
+#, php-format
+msgid ""
+"Document draft updated. <a target=\"_blank\" href=\"%s\">Preview document</a>"
+msgstr ""
+
+#: document-repository.php:519
+msgid "Document not available"
+msgstr ""
+
+#: document-repository.php:520
+#, php-format
+msgid ""
+"The version you requested is not available - <a href=\"%s\">Download the "
+"current version</a>"
+msgstr ""
+
+#: document-repository.php:529
+msgid "Download"
+msgstr ""
+
+#: document-repository.php:543
+msgid "A document search form for your site"
+msgstr ""
+
+#: document-repository.php:544
+msgid "Document Search"
+msgstr ""
+
+#: document-repository.php:561
+msgid "Search for:"
+msgstr ""
+
+#: document-repository.php:563
+msgid "Tags:"
+msgstr ""
+
+#: document-repository.php:579
+msgid "Title:"
+msgstr ""
+
+#: extras.php:50
+msgid "Document Admin"
+msgstr ""
+
+#: extras.php:67
+msgid "Insert Document"
+msgstr ""
+
+#: user-roles.php:61 user-roles.php:79 user-roles.php:140
+msgid "Document Role"
+msgstr ""
+
+#: user-roles.php:116 user-roles.php:133
+msgid "Document Roles"
+msgstr ""
+
+#: user-roles.php:118
+msgid "ID"
+msgstr ""
+
+#: user-roles.php:118
+msgid "Description"
+msgstr ""
+
+#: user-roles.php:118
+msgid "Actions"
+msgstr ""
+
+#: user-roles.php:123
+msgid "Delete"
+msgstr ""
+
+#: user-roles.php:127
+msgid "Add Document Role"
+msgstr ""
+
+#: user-roles.php:128
+msgid "Update"
+msgstr ""
+
+#: user-roles.php:156
+msgid " -- No Document Role -- "
+msgstr ""
