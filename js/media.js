@@ -23,7 +23,7 @@ function ra_send_to_editor(href,title) {
 	var l,m=tinyMCE.activeEditor,t=m?m.selection.getContent():'';
 	
 	if(t)
-		l={ length: t.length, text: t };
+		l={ text: t };
 	else
 		l=jQuery('#editorcontainer #content').getSelection();
 

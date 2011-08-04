@@ -59,7 +59,6 @@ class RA_Document_Post_Type {
 			return;
 		}
 		add_action( 'wp', array( &$this, 'wp' ) );
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( &$this, 'admin_menu' ), 20 );
 		add_action( 'admin_head_media_upload_type_form', array( &$this, 'media_upload_type_form' ) );
@@ -178,17 +177,6 @@ class RA_Document_Post_Type {
 	/*
 	enqueue script for the edit post area
 	*/
-	function admin_init() {
-		if( !isset( $_GET['post'] ) && !isset( $_GET['post_type'] ) )
-			return;
-
-		$pagename = basename( $_SERVER['REQUEST_URI'] );
-		if( ( $index = strpos( $pagename, '?' ) ) !== false )
-			$pagename = substr( $pagename, 0, $index );
-			
-		if( $pagename == 'post-new.php' || $pagename == 'post.php' )
-			$this->enqueue_scripts();
-	}
 	function admin_enqueue_scripts( $context ) {
 		if( 'media-upload-popup' == $context )
 			$this->enqueue_scripts();		

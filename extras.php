@@ -31,6 +31,7 @@ if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
 	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3' );
 
 add_action( 'plugins_loaded', array( 'RA_Document_Extras', 'plugins_loaded' ) );
+add_action( 'admin_init', array( 'RA_Document_Extras', 'admin_init' ) );
 add_action( 'admin_bar_menu', array( 'RA_Document_Extras', 'admin_bar_menu' ), 100 );
 add_action( 'admin_head_ra_media_document_callback', array( 'RA_Document_Extras', 'admin_head_document' ), 99 );
 add_action( 'media_upload_document', array( 'RA_Document_Extras', 'media_upload_document' ) );
@@ -43,6 +44,20 @@ class RA_Document_Extras {
 	function plugins_loaded() {
 		if( !class_exists( 'RA_Document_Post_Type' ) )
 			load_plugin_textdomain( 'document-repository', false, '/languages/' );
+	}
+	/*
+	enqueue script for the edit post area
+	*/
+	function admin_init() {
+		if( !isset( $_GET['post'] ) && !isset( $_GET['post_type'] ) )
+			return;
+
+		$pagename = basename( $_SERVER['REQUEST_URI'] );
+		if( ( $index = strpos( $pagename, '?' ) ) !== false )
+			$pagename = substr( $pagename, 0, $index );
+			
+		if( $pagename == 'post-new.php' || $pagename == 'post.php' )
+			wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
 	}
 	/*
 	add the admin bar menu item
