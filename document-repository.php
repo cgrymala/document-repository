@@ -97,7 +97,7 @@ class RA_Document_Post_Type {
 
 		ob_start();
 		$this->js_class = 'media-library-search';
-		$args = array( 'label_class' => '', 'primary_class' => 'media-library', 'extras_class' => 'media-library-extras', 'js_class' => $this->js_class );
+		$args = array( 'label_class' => '', 'primary_class' => 'media-library', 'extras_class' => 'media-library-extras' );
 		$instance = array( 'title' => __( 'Search Documents', 'document-repository' ) );
 		the_widget( 'RA_Document_Widget_Search', $instance, $args );
 		$content = ob_get_contents();
@@ -538,7 +538,7 @@ class RA_Document_Widget_Search extends WP_Widget {
 		global $ra_document_library, $wp_query;
 
 		$label_class = 'screen-reader-text';
-		$primary_class = $extras_class = $js_class = '';
+		$primary_class = $extras_class = '';
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$tags = !empty( $wp_query->query_vars['tag'] ) ? esc_attr( $wp_query->query_vars['tag'] ) : ''; 

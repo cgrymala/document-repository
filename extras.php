@@ -126,7 +126,7 @@ class RA_Document_Extras {
 separate function so admin_head_document is called in the iframe
 */
 function ra_media_document_callback() {
-	$domain = preg_replace( '|https?://([^/]+)|', '$1', get_option( 'siteurl' ) );
+	$domain = preg_replace( '|https?://([^/]+)(/.*)?$|', '$1', get_option( 'siteurl' ) );
 	$domain_qs = '';
 	if( is_multisite() )
 		$domain_qs = '&domain=' . $domain;

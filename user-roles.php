@@ -186,11 +186,13 @@ class RA_Document_User_Roles {
 	*/
 	function map_meta_cap( $caps, $cap, $user_id, $objects = array() ) {
 		global $wpdb;
-	
-		if( $cap == "edit_{$this->post_type_name}s" ) {
-			$user = new WP_User( $user_id );
-			if( !empty( $user->doc_role ) || $user->has_cap( 'manage_options' ) )
-				return array( 'edit_posts' );
+
+		foreach( array( 'edit', 'publish' ) as $c ) {
+			if( $cap == "{$c}_{$this->post_type_name}s" ) {
+				$user = new WP_User( $user_id );
+				if( !empty( $user->doc_role ) || $user->has_cap( 'manage_options' ) )
+					return array( "{$c}_posts" );
+			}
 		}
 	
 		if( ( $cap != 'edit_post' && $cap != 'delete_post' ) || empty( $objects ) || count( $objects ) > 1 )

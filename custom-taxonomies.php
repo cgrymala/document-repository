@@ -152,7 +152,7 @@ class RA_Document_Taxonomies {
 	/*
 	add custom taxonomies to the post content to eliminate need for custom templates
 	*/
-	function the_content( $content, $js_class = '' ) {
+	function the_content( $content ) {
 		global $post, $ra_document_library;
 		if( $post->post_type != $ra_document_library->post_type_name )
 			return $content;
