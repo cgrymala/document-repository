@@ -77,13 +77,18 @@ class RA_Document_Taxonomies {
 		); 	
 	
 		foreach( $taxes as $tax => $labels ) { 
-			register_taxonomy( $tax, array( $ra_document_library->post_type_name ), array(
+			$args = array(
 				'hierarchical' => true,
 				'labels' => $labels,
 				'show_ui' => true,
 				'query_var' => true,
 				'rewrite' => array( 'slug' => $tax )
-			));
+			);
+			$caps = apply_filters( 'document_taxonomy_capabilities', array(), $tax );
+			if( is_array( $caps ) && count( $caps ) > 0 )
+				$args['capabilities'] = $caps;
+
+			register_taxonomy( $tax, array( $ra_document_library->post_type_name ), $args );
 		}
 		add_action( 'document_search_widget', array( 'RA_Document_taxonomies', 'document_search_widget' ) );
 		add_action( 'save_post', array( 'RA_Document_taxonomies', 'save_post' ), 10, 2 );
