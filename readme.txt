@@ -3,7 +3,7 @@ Contributors: wpmuguru
 Tags: custom, post, revision, media
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 0.2.2
+Stable tag: trunk
 
 Turn a WordPress site into a revisioned document repository.
 
@@ -25,7 +25,7 @@ The document repository is designed to provide a central revisioned repository f
 
 This plugin was written by [Ron Rennick](http://ronandandrea.com/) in collaboration with the [University of Mary Washington](http://umw.edu/).
 
-[Plugin Page](http://wpmututorials.com/plugins/document-repository/)
+[Plugin Page for details](http://wpmututorials.com/plugins/document-repository/)
 
 == Installation ==
 
@@ -37,6 +37,13 @@ This plugin was written by [Ron Rennick](http://ronandandrea.com/) in collaborat
 `define( 'RA_DOCUMENT_REPO_BLOG_ID', 1 );`
 
 == Changelog ==
+
+= 0.2.3 =
+* add filter for custom taxonomy caps
+* use selected text in post edit as link text when inserting document link
+* extras script fixes for media library iframe
+* translation support
+* small fixes to document-repository plugin
 
 = 0.2.2 =
 * Rounded out feature set to beta.
