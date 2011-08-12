@@ -3,13 +3,13 @@ Contributors: wpmuguru
 Tags: custom, post, revision, media
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: trunk
+Stable tag: 0.2.3
 
 Turn a WordPress site into a revisioned document repository.
 
 == Description ==
 
-*Currently in beta* - it works but needs some testing, a few tweaks and translation support before release.
+*Release candidate*
 
 The document repository is designed to provide a central revisioned repository for documents in WordPress network being implemented as a content management system. However, it can be used in single WP sites and supports cross domain implementation via JSON.
 
