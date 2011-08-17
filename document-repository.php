@@ -4,7 +4,7 @@ Plugin Name: Document Repository
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Turn a WordPress site into a revisioned document repository.
 Author: Ron Rennick
-Version: 0.2.3
+Version: 0.2.3.1
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -26,7 +26,7 @@ This plugin is a collaboration project with contributions from University of Mar
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.1' );
 
 class RA_Document_Post_Type {
 	var $post_type_name = 'umw_document';
@@ -53,7 +53,7 @@ class RA_Document_Post_Type {
 	function  __construct() {
 		add_action( 'init', array( &$this, 'init' ) );
 		add_filter( 'the_content', array( &$this, 'the_content' ) );
-		if( isset( $_GET['media-library'] ) && $_GET['media-library'] == 1 ) {
+		if( ( isset( $_GET['media-library'] ) && $_GET['media-library'] == 1 ) || ( isset( $_GET['mls'] ) && $_GET['mls'] == 1 ) ) {
 			$this->media_library = true;
 			add_action( 'init', array( &$this, 'media_library' ), 14 );
 			return;
@@ -87,7 +87,7 @@ class RA_Document_Post_Type {
 
 		$vars = array( 'post_type' => $this->post_type_name );
 		if( isset( $_GET['mls'] ) && $_GET['mls'] == '1' ) {
-			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag', 'page' ) );
+			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag', 'paged' ) );
 			foreach( (array)$query_vars as $var ) {
 				if( isset( $_GET[$var] ) )
 					$vars[$var] = $_GET[$var];  
@@ -106,10 +106,10 @@ class RA_Document_Post_Type {
 		if( have_posts() ) {
 			$paging = '';
 			if( $wp_query->post_count < $wp_query->found_posts ) {
-				$page = empty( $vars['page'] ) ? 1 : (int)$vars['page'];
-				unset( $vars['page'] );
+				$page = empty( $vars['paged'] ) ? 1 : (int)$vars['paged'];
+				unset( $vars['paged'] );
 				unset( $vars['post_type'] );
-				$form = '<form><input type="hidden" name="page" value="%d" /><input type="submit" class="media-library-search pagesubmit" value="%s" />%s</form>';
+				$form = '<form><input type="hidden" name="paged" value="%d" /><input type="submit" class="media-library-search pagesubmit" value="%s" />%s</form>';
 				$inputs = '';
 				foreach( $vars as $k => $v )
 					$inputs .= '<input type="hidden" name="' . esc_attr( $k ) . '" value="' . esc_attr( $v ) . '" />';
@@ -539,7 +539,9 @@ class RA_Document_Widget_Search extends WP_Widget {
 
 		$label_class = 'screen-reader-text';
 		$primary_class = $extras_class = '';
+		$js_class = $ra_document_library->js_class;
 		extract( $args );
+
 		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$tags = !empty( $wp_query->query_vars['tag'] ) ? esc_attr( $wp_query->query_vars['tag'] ) : ''; 
 
@@ -552,7 +554,7 @@ class RA_Document_Widget_Search extends WP_Widget {
 	<input type="text" value="' . get_search_query() . '" name="s" id="s" /><br />
 	<label class="' . $label_class . '" for="tag">' . __( 'Tags:', 'document-repository' ) . '</label>
 	<input type="text" value="' . $tags . '" name="tag" id="tag" /><br /></div>';
-		echo '<div class="' . esc_attr( $extras_class ) .'">';
+		echo '<div class="' . esc_attr( $extras_class ) .'">';			
 		do_action( 'document_search_widget', $js_class );
 		echo '</div><input type="submit" id="searchsubmit" class="' . esc_attr( $js_class ) . '" value="'. esc_attr__( 'Search Documents', 'document-repository' ) .'" />
 		<div class="clear"></div>
