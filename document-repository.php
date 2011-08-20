@@ -4,7 +4,7 @@ Plugin Name: Document Repository
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Turn a WordPress site into a revisioned document repository.
 Author: Ron Rennick
-Version: 0.2.3.1
+Version: 0.2.3.2
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -26,7 +26,7 @@ This plugin is a collaboration project with contributions from University of Mar
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.1' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.2' );
 
 class RA_Document_Post_Type {
 	var $post_type_name = 'umw_document';

@@ -28,7 +28,7 @@ This plugin is a collaboration project with contributions from University of Mar
 if( !defined( 'RA_DOCUMENT_REPO_URL' ) )
 	define( 'RA_DOCUMENT_REPO_URL', '' );
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.1' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.2' );
 
 add_action( 'plugins_loaded', array( 'RA_Document_Extras', 'plugins_loaded' ) );
 add_action( 'admin_init', array( 'RA_Document_Extras', 'admin_init' ) );
@@ -138,12 +138,8 @@ function ra_media_document_callback() {
 //<!--
 var media_library_url='<?php echo $url; ?>';
 jQuery(document).ready(function() {
-	jQuery.getJSON(media_library_url, function(result) {
-		if(result.length)
-			jQuery('#document-media-library').html(result);
-	});
-});
-jQuery(document).ready(function() {
+	setTimeout(function(){ra_query_media_library(media_library_url);},100);
+	
 	jQuery('#document-media-library').click(function(e){
 		var el=e.target;
 		if(!jQuery(el).hasClass('media-library-search'))
@@ -159,13 +155,9 @@ jQuery(document).ready(function() {
 			var tax = el.id.split(':');
 			qs = '&' + tax[0] + '=' + el.name;
 		}
-		if(qs.length) {
-			url=media_library_url + '&mls=1' + qs;
-			jQuery.getJSON(url, function(result) {
-				if(result.length)
-					jQuery('#document-media-library').html(result);
-			});
-		}
+		if(qs.length)
+			ra_query_media_library(media_library_url + '&mls=1' + qs);
+
 		e.preventDefault();
 	});
 });

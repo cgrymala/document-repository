@@ -35,6 +35,23 @@ function ra_send_to_editor(href,title) {
 
 	send_to_editor('<a href="'+href+'" title="'+title+'">'+linktext+'</a>');
 }
+function ra_query_media_library(uri){
+	if (jQuery.browser.msie && parseInt(jQuery.browser.version, 10) >= 8 && window.XDomainRequest) {
+		// Use Microsoft XDR
+		var xdr = new XDomainRequest();
+		xdr.open('get',uri);
+		xdr.onload = function() {
+			ra_update_media_library_frame(jQuery.parseJSON(xdr.responseText));
+		};
+		xdr.send();
+	} else {
+		jQuery.getJSON(uri,ra_update_media_library_frame);
+	}
+}
+function ra_update_media_library_frame(content){
+	if(content.length)
+		jQuery('#document-media-library').html(content);
+}
 /*
  * jQuery plugin: fieldSelection - v0.1.0 - last change: 2006-12-16
  * (c) 2006 Alex Brem <alex@0xab.cd> - http://blog.0xab.cd
