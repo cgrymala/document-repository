@@ -4,7 +4,7 @@ Plugin Name: Document Repository Network Extras
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Adds a Document Admin link menu to the admin bar & media handling hooks for the edit posts area. In WP networks, define RA_DOCUMENT_REPO_URL constant (repository site URL) in your wp-config to add the repository to the media library across the network. 
 Author: Ron Rennick
-Version: 0.2.3.1
+Version: 0.2.4
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -28,7 +28,7 @@ This plugin is a collaboration project with contributions from University of Mar
 if( !defined( 'RA_DOCUMENT_REPO_URL' ) )
 	define( 'RA_DOCUMENT_REPO_URL', '' );
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.2' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.4' );
 
 add_action( 'plugins_loaded', array( 'RA_Document_Extras', 'plugins_loaded' ) );
 add_action( 'admin_init', array( 'RA_Document_Extras', 'admin_init' ) );
