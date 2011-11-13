@@ -21,6 +21,8 @@ The document repository is designed to provide a central revisioned repository f
 *	*Optional custom roles* - A custom role plugin is included which permits restricting contributor, author & editor access to document posts based on organizational role
 *	*Optiona extras* - The extras plugin is included to add a link to document admin to document maintainers' admin bar & adds a document media type to the edit post area across the network.
 
+[User instructions/documentation provided by University of Mary Washington](http://technology.umw.edu/wordpress101/document-repository/)
+
 This plugin was written by [Ron Rennick](http://ronandandrea.com/) in collaboration with the [University of Mary Washington](http://umw.edu/).
 
 [Plugin Page for details](http://wpmututorials.com/plugins/document-repository/)
