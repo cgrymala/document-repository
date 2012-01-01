@@ -4,7 +4,7 @@ Plugin Name: Document Repository Custom Roles
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Optional Custom Roles for the document repository. Custom roles are combined with WP roles to manage contributor, author & editor permissions.
 Author: Ron Rennick
-Version: 0.2.4
+Version: 0.2.4.1
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -42,7 +42,7 @@ class RA_Document_User_Roles {
 			add_action( 'admin_menu', array( &$this, 'add_admin_page' ), 20 );
 			
 		add_filter( 'map_meta_cap', array( &$this, 'map_meta_cap' ), 10, 4 );
-		if( !current_user_can( 'manage_users' ) )
+		if( !current_user_can( 'edit_users' ) )
 			return;
 
 		add_filter( 'manage_posts_columns', array( &$this, 'manage_posts_columns' ), 10, 2 );
