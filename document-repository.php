@@ -4,7 +4,7 @@ Plugin Name: Document Repository
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Turn a WordPress site into a revisioned document repository.
 Author: Ron Rennick
-Version: 0.2.4.1
+Version: 0.2.5
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -26,7 +26,7 @@ This plugin is a collaboration project with contributions from University of Mar
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.4.1' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.5' );
 
 class RA_Document_Post_Type {
 	var $post_type_name = 'umw_document';
@@ -58,17 +58,18 @@ class RA_Document_Post_Type {
 			add_action( 'init', array( &$this, 'media_library' ), 14 );
 			return;
 		}
-		add_action( 'wp', array( &$this, 'wp' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
-		add_action( 'admin_menu', array( &$this, 'admin_menu' ), 20 );
-		add_action( 'admin_head_media_upload_type_form', array( &$this, 'media_upload_type_form' ) );
-		add_action( 'add_attachment', array( &$this, 'add_attachment' ) );
-		add_filter( 'pre_site_option_mu_media_buttons', array( &$this, 'media_buttons_filter' ) );
-		add_filter( 'media_upload_tabs', array( &$this, 'media_upload_tabs' ), 99 );
-		add_filter( 'umw_document_rewrite_rules', array( &$this, 'umw_document_rewrite_rules' ) );
-		add_filter( 'wp_handle_upload_prefilter', array( &$this, 'wp_handle_upload_prefilter' ) );
-		add_action( 'delete_post', array( &$this, 'delete_post' ) );
-		add_filter( 'post_updated_messages', array( &$this, 'post_updated_messages' ) );
+		add_action( 'wp', array( $this, 'wp' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ), 20 );
+		add_action( 'admin_head_media_upload_type_form', array( $this, 'media_upload_type_form' ) );
+		add_action( 'add_attachment', array( $this, 'add_attachment' ) );
+		add_filter( 'pre_site_option_mu_media_buttons', array( $this, 'media_buttons_filter' ) );
+		add_filter( 'media_upload_tabs', array( $this, 'media_upload_tabs' ), 99 );
+		add_action( 'media_buttons', array( $this, 'media_buttons' ), 20 );
+		add_filter( 'umw_document_rewrite_rules', array( $this, 'umw_document_rewrite_rules' ) );
+		add_filter( 'wp_handle_upload_prefilter', array( $this, 'wp_handle_upload_prefilter' ) );
+		add_action( 'delete_post', array( $this, 'delete_post' ) );
+		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
 		
 		load_plugin_textdomain( 'document-repository', false, '/languages/' );
 		
@@ -178,11 +179,9 @@ class RA_Document_Post_Type {
 	enqueue script for the edit post area
 	*/
 	function admin_enqueue_scripts( $context ) {
-		if( 'media-upload-popup' == $context )
-			$this->enqueue_scripts();		
-	}
-	function enqueue_scripts() {
-		wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
+		global $typenow;
+		if ( ( isset( $typenow ) && $typenow == 'umw_document' ) || 'media-upload-popup' == $context )
+			wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
 	}
 	/*
 	hide the save all changes button
@@ -517,6 +516,27 @@ class RA_Document_Post_Type {
 			return $content;
 			
 		return  $content . '<h4><a href="' . get_permalink() . '" title="' . get_the_title() . '">' . __( 'Download', 'document-repository' ) . '</a></h4>';
+	}
+	function media_buttons() {
+		global $wp_version, $typenow;
+		if ( ! isset( $typenow ) || $typenow != 'umw_document' || version_compare( $wp_version, '3.5', '<') )
+			return;
+
+		$post = get_post();
+		if ( ! $post && ! empty( $GLOBALS['post_ID'] ) )
+			$post = $GLOBALS['post_ID'];
+
+			$post_id = is_numeric( $post ) ? $post : $post->ID;
+?>
+<a href='media-upload.php?post_id=<?php echo $post_id; ?>&#038;TB_iframe=1' id='add_media' class='thickbox' title='Add Media'><img src='images/media-button-other.gif?ver=20100531' alt='Add Media' onclick='return false;' /></a>
+<script type="text/javascript">
+//<!--
+jQuery(document).ready(function(){
+	jQuery('#add_media').siblings('a.add_media').hide();
+});
+//-->
+</script>
+<?php
 	}
 }
 

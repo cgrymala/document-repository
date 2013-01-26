@@ -49,7 +49,7 @@ function ra_query_media_library(uri){
 	}
 }
 function ra_update_media_library_frame(content){
-	if(content.length)
+	if (content.length)
 		jQuery('#document-media-library').html(content);
 }
 /*

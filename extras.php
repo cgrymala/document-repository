@@ -4,7 +4,7 @@ Plugin Name: Document Repository Network Extras
 Plugin URI: http://wpmututorials.com/plugins/document-repository/
 Description: Adds a Document Admin link menu to the admin bar & media handling hooks for the edit posts area. In WP networks, define RA_DOCUMENT_REPO_URL constant (repository site URL) in your wp-config to add the repository to the media library across the network. 
 Author: Ron Rennick
-Version: 0.2.4.1
+Version: 0.2.5
 Author URI: http://ronandandrea.com/
 
 This plugin is a collaboration project with contributions from University of Mary Washington (http://umw.edu/)
@@ -28,14 +28,13 @@ This plugin is a collaboration project with contributions from University of Mar
 if( !defined( 'RA_DOCUMENT_REPO_URL' ) )
 	define( 'RA_DOCUMENT_REPO_URL', '' );
 if( !defined( 'RA_DOCUMENT_REPO_VERSION' ) )
-	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.3.2' );
+	define( 'RA_DOCUMENT_REPO_VERSION', '0.2.5' );
 
 add_action( 'plugins_loaded', array( 'RA_Document_Extras', 'plugins_loaded' ) );
 add_action( 'admin_init', array( 'RA_Document_Extras', 'admin_init' ) );
 add_action( 'admin_bar_menu', array( 'RA_Document_Extras', 'admin_bar_menu' ), 100 );
 add_action( 'admin_head_ra_media_document_callback', array( 'RA_Document_Extras', 'admin_head_document' ), 99 );
 add_action( 'media_upload_document', array( 'RA_Document_Extras', 'media_upload_document' ) );
-add_filter( 'media_buttons_context', array( 'RA_Document_Extras', 'media_buttons_context' ) );
 
 class RA_Document_Extras {
 	/*
@@ -49,6 +48,9 @@ class RA_Document_Extras {
 	enqueue script for the edit post area
 	*/
 	function admin_init() {
+
+		global $wp_version;
+
 		if( !isset( $_GET['post'] ) && !isset( $_GET['post_type'] ) )
 			return;
 
@@ -58,6 +60,12 @@ class RA_Document_Extras {
 			
 		if( $pagename == 'post-new.php' || $pagename == 'post.php' )
 			wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
+
+		if ( version_compare( $wp_version, '3.5', '<' ) )
+			add_filter( 'media_buttons_context', array( 'RA_Document_Extras', 'media_buttons_context' ) );
+		else
+			add_action( 'media_buttons', array( 'RA_Document_Extras', 'media_buttons' ) );
+
 	}
 	/*
 	add the admin bar menu item
@@ -84,13 +92,35 @@ class RA_Document_Extras {
 	/*
 	add the document media button to the media button row in the post editor
 	*/
+	function media_buttons( $editor ) {
+
+		printf( '<span class="ra-document-library-%s">%s</span>', sanitize_html_class( $editor ), self::media_buttons_context( '' ) );
+
+	}
 	function media_buttons_context( $context ) {
-		global $post_type;
-		if( $post_type == 'umw_document' )
+
+		global $typenow, $wp_version;
+		if( $typenow == 'umw_document' )
 			return $context;
-		
-		$media_button = preg_replace( '|^(.*src=[\'"])' . admin_url( '/') . '(.*)$|', ' $1$2', _media_button( __( 'Insert Document', 'document-repository' ), plugin_dir_url( __FILE__ ) . 'images/doc.jpg', 'document', 'document' ) );
+
+		if ( version_compare( $wp_version, '3.5', '<' ) ) {
+
+			$media_button = preg_replace( '|^(.*src=[\'"])' . admin_url( '/') . '(.*)$|', ' $1$2', _media_button( __( 'Insert Document', 'document-repository' ), plugin_dir_url( __FILE__ ) . 'images/doc.jpg', 'document', 'document' ) );
+
+		} else {
+
+			$post = get_post();
+			if ( ! $post && ! empty( $GLOBALS['post_ID'] ) )
+				$post = $GLOBALS['post_ID'];
+	
+			$post_id = is_numeric( $post ) ? $post : $post->ID;
+
+			$media_button = sprintf( '<a href="media-upload.php?post_id=%d&type=document&tab=document&#038;TB_iframe=1" id="add_media" class="thickbox" title="%s"><img src="images/media-button-other.gif?ver=20100531" alt="Add Media" onclick="return false;" /></a>', $post_id, __( 'Insert Document', 'document-repository' ) );
+
+		}
+
 		return $context . $media_button;
+
 	}
 	function admin_head_document() { ?>
 <style type="text/css">
@@ -131,7 +161,7 @@ function ra_media_document_callback() {
 	if( is_multisite() )
 		$domain_qs = '&domain=' . $domain;
 
-	$url = RA_DOCUMENT_REPO_URL . '/' . '?media-library=1' . $domain_qs;
+	$url = RA_DOCUMENT_REPO_URL . '/?media-library=1' . $domain_qs;
 ?>
 <div id="document-media-library"></div>
 <script type="text/javascript"> 
