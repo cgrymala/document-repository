@@ -49,16 +49,12 @@ class RA_Document_Extras {
 	*/
 	function admin_init() {
 
-		global $wp_version;
+		global $wp_version, $pagenow;
 
-		if( !isset( $_GET['post'] ) && !isset( $_GET['post_type'] ) )
+		if( !isset( $_GET['post'] ) && !isset( $_GET['post_type'] ) && $pagenow != 'post-new.php' )
 			return;
 
-		$pagename = basename( $_SERVER['REQUEST_URI'] );
-		if( ( $index = strpos( $pagename, '?' ) ) !== false )
-			$pagename = substr( $pagename, 0, $index );
-			
-		if( $pagename == 'post-new.php' || $pagename == 'post.php' )
+		if( $pagenow == 'post-new.php' || $pagenow == 'post.php' )
 			wp_enqueue_script( 'ra-document', plugin_dir_url( __FILE__ ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
 
 		if ( version_compare( $wp_version, '3.5', '<' ) )
