@@ -207,8 +207,11 @@ class RA_Document_Post_Type {
 		return $setting;
 	}
 	function media_upload_tabs( $tabs ) {
+		if ( ! isset( $_GET['post_id'] ) )
+			return $tabs;
+
 		$post = get_post( $_GET['post_id'] );
-		if( $post->post_type == $this->post_type_name )
+		if ( ! empty( $post->post_type ) && $post->post_type == $this->post_type_name )
 			return array( 'type' => $tabs['type'] );
 
 		return $tabs;
@@ -459,6 +462,12 @@ class RA_Document_Post_Type {
 	custom messages for the document post type
 	*/
 	function post_updated_messages( $messages ) {
+
+		global $post, $post_ID;
+
+		if ( empty( $post ) || empty( $post_ID ) )
+			return $messages;
+
 		$messages['umw_document'] = array(
 			 1 => sprintf( __( 'Document updated. <a href="%s">View document</a>', 'document-repository' ), esc_url( get_permalink($post_ID) ) ),
 			 4 => __('Document updated.', 'document-repository' ),
@@ -470,7 +479,9 @@ class RA_Document_Post_Type {
 				date_i18n( __( 'M j, Y @ G:i', 'document-repository' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
 			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Preview document</a>', 'document-repository' ), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
 		);
+
 		return $messages;
+
 	}
 	/*
 	add document post type rewrite rules on activation

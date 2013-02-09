@@ -73,7 +73,7 @@ class RA_Document_Extras {
 			return;
 	
 		$user = get_current_user();
-		if( !$user->doc_role && ( !defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || !current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) && !current_user_can( 'manage_options' ) )
+		if( empty( $user->doc_role ) && ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || ! current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) && ! current_user_can( 'manage_options' ) )
 			return;
 
 		$wp_admin_bar->add_menu( array( 'id' => 'umw', 'title' => __( 'Document Admin', 'document-repository' ), 'href' => RA_DOCUMENT_REPO_URL . '/wp-admin/edit.php?post_type=umw_document' ) );

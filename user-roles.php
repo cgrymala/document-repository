@@ -145,9 +145,9 @@ class RA_Document_User_Roles {
 		if( isset( $_POST['doc_role'] ) ) {
 			$role = (int)$_POST['doc_role'];
 			if( $role )
-				update_usermeta( $user_id, 'doc_role', $role );
+				update_user_meta( $user_id, 'doc_role', $role );
 			else
-				delete_usermeta( $user_id, 'doc_role' );
+				delete_user_meta( $user_id, 'doc_role' );
 		}
 	}	
 	function role_select( $role = 0 ) {
