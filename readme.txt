@@ -2,8 +2,8 @@
 Contributors: wpmuguru
 Tags: custom, post, revision, media
 Requires at least: 3.2
-Tested up to: 3.2.1
-Stable tag: 0.2.4
+Tested up to: 3.5.1
+Stable tag: 0.2.5
 
 Turn a WordPress site into a revisioned document repository.
 
@@ -37,6 +37,9 @@ This plugin was written by [Ron Rennick](http://ronandandrea.com/) in collaborat
 `define( 'RA_DOCUMENT_REPO_BLOG_ID', 1 );`
 
 == Changelog ==
+
+= 0.2.5 =
+* update for WP 3.5
 
 = 0.2.4 =
 * script fixes to 0.2.3, crossdomain IE support
