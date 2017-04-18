@@ -1,7 +1,11 @@
 <?php
 /*
-replace the default search widget with an extensible one
-*/
+ * Replaces the default search widget with an extensible one
+ *
+ * @package    WordPress
+ * @subpackage Document Repository
+ * @version    0.5
+ */
 class RA_Document_Widget_Search extends WP_Widget {
 	
 	function __construct() {
