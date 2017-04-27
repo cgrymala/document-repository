@@ -130,8 +130,15 @@ class RA_Document_Extras {
 
 			$post_id = is_numeric( $post ) ? $post : $post->ID;
 
-			$media_button = sprintf( '<a href="media-upload.php?post_id=%d&type=document&tab=document&#038;TB_iframe=1" id="add_media" class="thickbox" title="%s"><img src="images/media-button-other.gif?ver=20100531" alt="Add Media" onclick="return false;" /></a>', $post_id, __( 'Insert Document', 'document-repository' ) );
-
+			if ( version_compare( $wp_version, '4.0', '<' ) ) {
+				$media_button = sprintf( '<a href="media-upload.php?post_id=%d&type=document&tab=document&#038;TB_iframe=1" id="add_media" class="thickbox" title="%s"><img src="images/media-button-other.gif?ver=20100531" alt="Add Media" onclick="return false;" /></a>', $post_id, __( 'Insert Document', 'document-repository' ) );
+			} else {
+				$media_button = sprintf( '
+<button type="button" id="insert-ra-document-button" class="button insert-ra-document add_media" data-editor="content">
+    <span class="wp-ra-document-buttons-icon"><img src="images/media-button-other.gif?ver=20100531" alt="Add Document" onclick="return false;" /></span>
+     %s
+</button>', __( 'Add Document', 'document-repository' ) );
+			}
 		}
 
 		return $context . $media_button;
