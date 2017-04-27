@@ -75,8 +75,15 @@ class RA_Document_Extras {
 			return;
 		}
 
+		if ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) &&
+             ( ! defined( 'RA_DOCUMENT_REPO' ) || ! is_numeric( 'RA_DOCUMENT_REPO' ) ) ) {
+		    return;
+        }
+
 		$user = get_current_user();
-		if ( empty( $user->doc_role ) && ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || ! current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) && ! current_user_can( 'manage_options' ) ) {
+		if ( empty( $user->doc_role ) &&
+             ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || ! current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) &&
+             ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 

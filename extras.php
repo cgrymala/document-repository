@@ -28,19 +28,19 @@ This plugin is a collaboration project with contributions from University of Mar
 if ( ! defined( 'RA_DOCUMENT_REPO_URL' ) ) {
     if ( defined( 'RA_DOCUMENT_REPO' ) ) {
 	    if ( is_numeric( RA_DOCUMENT_REPO ) ) {
-	        if ( ! defined( 'RA_DOCUMENT_REPO_ID' ) ) {
-	            define( 'RA_DOCUMENT_REPO_ID', RA_DOCUMENT_REPO );
+	        if ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) ) {
+	            define( 'RA_DOCUMENT_REPO_BLOG_ID', RA_DOCUMENT_REPO );
             }
 		    define( 'RA_DOCUMENT_REPO_URL', get_home_url( RA_DCOUMENT_REPO, '' ) );
 	    } else {
 		    define( 'RA_DOCUMENT_REPO_URL', esc_url( RA_DOCUMENT_REPO ) );
 	    }
-    } else if ( defined( 'RA_DOCUMENT_REPO_ID' ) ) {
-	    if ( is_numeric( RA_DOCUMENT_REPO_ID ) ) {
-		    define( 'RA_DOCUMENT_REPO_URL', get_home_url( RA_DCOUMENT_REPO_ID, '' ) );
+    } else if ( defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) ) {
+	    if ( is_numeric( RA_DOCUMENT_REPO_BLOG_ID ) ) {
+		    define( 'RA_DOCUMENT_REPO_URL', get_home_url( RA_DOCUMENT_REPO_BLOG_ID, '' ) );
 	    } else {
-		    define( 'RA_DOCUMENT_REPO_URL', esc_url( RA_DOCUMENT_REPO_ID ) );
-	    }
+	        define( 'RA_DOCUMENT_REPO_URL', '' );
+        }
     } else {
 	    define( 'RA_DOCUMENT_REPO_URL', '' );
     }
