@@ -102,6 +102,7 @@ class RA_Document_Taxonomies {
 		add_filter( 'post_updated_messages', array( 'RA_Document_taxonomies', 'post_updated_messages' ), 12 );
 		add_filter( 'the_content', array( 'RA_Document_taxonomies', 'the_content' ), 9 );
 		add_filter( 'document_search_query_vars', array( 'RA_Document_taxonomies', 'document_search_query_vars' ) );
+		add_filter( 'ra-document-search-taxonomies', array( 'RA_Document_Taxonomies', 'document_search_query_vars' ) );
 
 		return true;
 	}

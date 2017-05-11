@@ -111,17 +111,35 @@ class RA_Document_Post_Type {
 
 	/**
 	 * Attempt to fix the empty search issues
+     *
+     * @access private
+     * @since  0.5
+     * @return void
 	 */
 	private function _fix_document_search() {
 	    if ( ! isset( $_GET['s'] ) || ! empty( $_GET['s'] ) ) {
 	        return;
         }
 
-        if ( ! isset( $_GET['tag'] ) && ! isset( $_GET['audience'] ) && ! isset( $_GET['division'] ) && ! isset( $_GET['process'] ) ) {
+        $taxes = apply_filters( 'ra-document-search-taxonomies', array( 'tag' ) );
+
+	    $continue = false;
+
+	    foreach ( $taxes as $t ) {
+		    if ( isset( $_GET[ $t ] ) ) {
+			    $continue = true;
+		    }
+	    }
+
+	    if ( false === $continue ) {
 	        return;
         }
 
-        foreach ( array ( 's', 'tag', 'audience', 'division', 'process' ) as $t ) {
+        if ( isset( $_GET['s'] ) && empty( $_GET['s'] ) ) {
+	        unset( $_GET['s'] );
+        }
+
+        foreach ( $taxes as $t ) {
 	        if ( isset( $_GET[$t] ) && empty( $_GET[$t] ) ) {
 	            unset( $_GET[$t] );
             }
