@@ -105,8 +105,28 @@ class RA_Document_Post_Type {
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
 		
 		load_plugin_textdomain( 'document-repository', false, '/languages/' );
-		
+
+		$this->_fix_document_search();
 	}
+
+	/**
+	 * Attempt to fix the empty search issues
+	 */
+	private function _fix_document_search() {
+	    if ( ! isset( $_GET['s'] ) || ! empty( $_GET['s'] ) ) {
+	        return;
+        }
+
+        if ( ! isset( $_GET['tag'] ) && ! isset( $_GET['audience'] ) && ! isset( $_GET['division'] ) && ! isset( $_GET['process'] ) ) {
+	        return;
+        }
+
+        foreach ( array ( 's', 'tag', 'audience', 'division', 'process' ) as $t ) {
+	        if ( isset( $_GET[$t] ) && empty( $_GET[$t] ) ) {
+	            unset( $_GET[$t] );
+            }
+        }
+    }
 	
 	/*
 	 * Handle requests from the media library on the client via JSON
