@@ -20,15 +20,15 @@ class RA_Document_Post_Type {
 	 * Holds the class instance.
 	 *
 	 * @since   0.5
-	 * @access	private
-	 * @var		\RA_Document_Post_Type
+	 * @access    private
+	 * @var        \RA_Document_Post_Type
 	 */
 	private static $instance;
 	/**
-     * The slug to be used for the post type registration
-     *
-     * @since  0.1
-     * @access public
+	 * The slug to be used for the post type registration
+	 *
+	 * @since  0.1
+	 * @access public
 	 * @var    string
 	 */
 	public $post_type_name = 'umw_document';
@@ -38,10 +38,10 @@ class RA_Document_Post_Type {
 	var $media_library = false;
 	var $js_class = '';
 	/**
-     * The default arguments for the new post type
-     *
-     * @since  0.1
-     * @access public
+	 * The default arguments for the new post type
+	 *
+	 * @since  0.1
+	 * @access public
 	 * @var    array
 	 */
 	var $post_type = array(
@@ -51,36 +51,37 @@ class RA_Document_Post_Type {
 		'show_in_nav_menus' => false,
 		'taxonomies'        => array( 'post_tag' ),
 		'supports'          => array( 'title', 'editor', 'author', 'revisions' ),
-        'show_in_rest'      => true,
+		'show_in_rest'      => true,
 	);
-	
+
 	/*
 	 * Old-style constructor method, just in case
 	 */
 	function RA_Document_Post_Type() {
 		return $this->__construct();
 	}
-	
+
 	/**
 	 * Returns the instance of this class.
 	 *
 	 * @access  public
+	 * @return    \RA_Document_Post_Type
 	 * @since   0.5
-	 * @return	\RA_Document_Post_Type
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			$className = __CLASS__;
+			$className      = __CLASS__;
 			self::$instance = new $className;
 		}
+
 		return self::$instance;
 	}
-	
+
 	/**
 	 * RA_Document_Post_Type constructor.
-     *
-     * @access private
-     * @since  0.1
+	 *
+	 * @access private
+	 * @since  0.1
 	 */
 	private function __construct() {
 		add_action( 'init', array( &$this, 'init' ) );
@@ -88,7 +89,7 @@ class RA_Document_Post_Type {
 		if ( ( isset( $_GET['media-library'] ) && $_GET['media-library'] == 1 ) || ( isset( $_GET['mls'] ) && $_GET['mls'] == 1 ) ) {
 			$this->media_library = true;
 			add_action( 'init', array( &$this, 'media_library' ), 14 );
-			
+
 			return;
 		}
 		add_action( 'wp', array( $this, 'wp' ) );
@@ -103,7 +104,7 @@ class RA_Document_Post_Type {
 		add_filter( 'wp_handle_upload_prefilter', array( $this, 'wp_handle_upload_prefilter' ) );
 		add_action( 'delete_post', array( $this, 'delete_post' ) );
 		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ) );
-		
+
 		load_plugin_textdomain( 'document-repository', false, '/languages/' );
 
 		$this->_fix_document_search();
@@ -111,41 +112,41 @@ class RA_Document_Post_Type {
 
 	/**
 	 * Attempt to fix the empty search issues
-     *
-     * @access private
-     * @since  0.5
-     * @return void
+	 *
+	 * @access private
+	 * @return void
+	 * @since  0.5
 	 */
 	private function _fix_document_search() {
-	    if ( ! isset( $_GET['s'] ) || ! empty( $_GET['s'] ) ) {
-	        return;
-        }
+		if ( ! isset( $_GET['s'] ) || ! empty( $_GET['s'] ) ) {
+			return;
+		}
 
-        $taxes = apply_filters( 'ra-document-search-taxonomies', array( 'tag' ) );
+		$taxes = apply_filters( 'ra-document-search-taxonomies', array( 'tag' ) );
 
-	    $continue = false;
+		$continue = false;
 
-	    foreach ( $taxes as $t ) {
-		    if ( isset( $_GET[ $t ] ) ) {
-			    $continue = true;
-		    }
-	    }
+		foreach ( $taxes as $t ) {
+			if ( isset( $_GET[ $t ] ) ) {
+				$continue = true;
+			}
+		}
 
-	    if ( false === $continue ) {
-	        return;
-        }
+		if ( false === $continue ) {
+			return;
+		}
 
-        if ( isset( $_GET['s'] ) && empty( $_GET['s'] ) ) {
-	        unset( $_GET['s'] );
-        }
+		if ( isset( $_GET['s'] ) && empty( $_GET['s'] ) ) {
+			unset( $_GET['s'] );
+		}
 
-        foreach ( $taxes as $t ) {
-	        if ( isset( $_GET[$t] ) && empty( $_GET[$t] ) ) {
-	            unset( $_GET[$t] );
-            }
-        }
-    }
-	
+		foreach ( $taxes as $t ) {
+			if ( isset( $_GET[ $t ] ) && empty( $_GET[ $t ] ) ) {
+				unset( $_GET[ $t ] );
+			}
+		}
+	}
+
 	/*
 	 * Handle requests from the media library on the client via JSON
 	 *
@@ -159,11 +160,11 @@ class RA_Document_Post_Type {
 		if ( isset( $_GET['domain'] ) && ( $d = stripslashes( $_GET['domain'] ) ) && preg_match( '|^([a-zA-Z0-9-\.])+$|', $d ) ) {
 			$domain = $d;
 		}
-		
+
 		if ( $domain ) {
 			header( 'Access-Control-Allow-Origin: http://' . $domain );
 		}
-		
+
 		$vars = array( 'post_type' => $this->post_type_name );
 		if ( isset( $_GET['mls'] ) && $_GET['mls'] == '1' ) {
 			$query_vars = apply_filters( 'document_search_query_vars', array( 's', 'tag', 'paged' ) );
@@ -174,7 +175,7 @@ class RA_Document_Post_Type {
 			}
 		}
 		$wp_query = new WP_Query( $vars );
-		
+
 		ob_start();
 		$this->js_class = 'media-library-search';
 		$args           = array(
@@ -198,7 +199,7 @@ class RA_Document_Post_Type {
 				foreach ( $vars as $k => $v ) {
 					$inputs .= '<input type="hidden" name="' . esc_attr( $k ) . '" value="' . esc_attr( $v ) . '" />';
 				}
-				
+
 				if ( $page > 1 ) {
 					$paging .= sprintf( $form, $page - 1, esc_attr( __( 'Previous Page', 'document-repository' ) ), $inputs );
 				}
@@ -208,10 +209,11 @@ class RA_Document_Post_Type {
 				if ( $paging ) {
 					$paging = '<div class="tablenav">' . $paging . '</div>';
 				}
-				
+
 				$content .= $paging;
 			}
 			$content .= '<ul class="ml-posts">';
+			global $post;
 			while ( have_posts() ) {
 				the_post();
 				$content .= '<li class="ml-post ' . ( 1 == ( $index ++ % 2 ) ? 'alt' : '' ) . '"><h3>' . get_the_title() . ' <a href="' . get_permalink() . '" class="button" title="' . get_the_title() . '" onclick="ra_insert_document(this); return false;">' . __( 'Insert into Post', 'document-repository' ) . '</a></h3>';
@@ -234,7 +236,7 @@ class RA_Document_Post_Type {
 		echo json_encode( $content );
 		exit;
 	}
-	
+
 	/*
 	 * Now that WordPress is fired up, fire up the custom post type
 	 *
@@ -247,7 +249,7 @@ class RA_Document_Post_Type {
 			$this->post_type['capability_type'] = $this->post_type_name;
 			$this->post_type['map_meta_cap']    = true;
 		}
-		
+
 		$this->post_type['menu_icon'] = plugin_dir_url( dirname( __FILE__ ) ) . 'images/doc-16.jpg';
 		$this->post_type['labels']    = array(
 			'name'               => __( 'Documents', 'document-repository' ),
@@ -265,12 +267,12 @@ class RA_Document_Post_Type {
 			'parent'             => __( 'Parent Document', 'document-repository' )
 		);
 		register_post_type( $this->post_type_name, $this->post_type );
-		
+
 		if ( isset( $_GET['ra-make-current'] ) && $_GET['ra-make-current'] == 1 && wp_verify_nonce( $_GET['_wpnonce'], 'doc-make-current' ) ) {
 			$this->make_current();
 		}
 	}
-	
+
 	/*
 	enqueue script for the edit post area
 	*/
@@ -280,7 +282,7 @@ class RA_Document_Post_Type {
 			wp_enqueue_script( 'ra-document', plugin_dir_url( dirname( __FILE__ ) ) . 'js/media.js', array( 'jquery' ), RA_DOCUMENT_REPO_VERSION, true );
 		}
 	}
-	
+
 	/*
 	hide the save all changes button
 	*/
@@ -289,7 +291,7 @@ class RA_Document_Post_Type {
 		if ( ! $post_id ) {
 			return;
 		}
-		
+
 		$post = get_post( $post_id );
 		if ( $post->post_type == $this->post_type_name ) { ?>
             <style type="text/css">p.savebutton input#save {
@@ -297,7 +299,7 @@ class RA_Document_Post_Type {
                 }</style>
 		<?php }
 	}
-	
+
 	/*
 	remove all media buttons except the file one in the edit Document screen
 	*/
@@ -306,23 +308,23 @@ class RA_Document_Post_Type {
 		if ( $post_type == $this->post_type_name ) {
 			return array();
 		}
-		
+
 		return $setting;
 	}
-	
+
 	function media_upload_tabs( $tabs ) {
 		if ( ! isset( $_GET['post_id'] ) ) {
 			return $tabs;
 		}
-		
+
 		$post = get_post( $_GET['post_id'] );
 		if ( ! empty( $post->post_type ) && $post->post_type == $this->post_type_name ) {
 			return array( 'type' => $tabs['type'] );
 		}
-		
+
 		return $tabs;
 	}
-	
+
 	/*
 	catch the uploaded file and remove it from the media library
 	allow revisions of uploaded documents
@@ -330,17 +332,17 @@ class RA_Document_Post_Type {
 	*/
 	function add_attachment( $post_id ) {
 		global $wpdb;
-		
+
 		$post = get_post( $post_id );
 		if ( $post->post_parent < 1 ) {
 			return;
 		}
-		
+
 		$post_parent = get_post( $post->post_parent );
 		if ( $post_parent->post_type != $this->post_type_name ) {
 			return;
 		}
-		
+
 		$attachments = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'document_file' and post_parent = %d", $post->post_parent ) );
 		if ( ! empty( $attachments ) ) {
 			$revision = wp_save_post_revision( $post->post_parent );
@@ -355,11 +357,11 @@ class RA_Document_Post_Type {
 			'post_modified'     => current_time( 'mysql' ),
 			'post_modified_gmt' => current_time( 'mysql', 1 )
 		), array( 'ID' => $post->post_parent ) );
-		
+
 		printf( '<a href="#" onclick="ra_close_media(); return false;">%s</a>', __( 'Finished.', 'document-repository' ) );
 		exit;
 	}
-	
+
 	/*
 	handle document permalink request
 	*/
@@ -368,27 +370,27 @@ class RA_Document_Post_Type {
 		if ( is_admin() || ! is_singular() ) {
 			return;
 		}
-		
+
 		$object = get_queried_object();
 		if ( $object->post_type != $this->post_type_name ) {
 			return;
 		}
-		
+
 		$children = $this->get_child_documents( $object->ID, true );
 		if ( empty( $children ) ) {
 			$this->message = 'none';
-			
+
 			return;
 		}
-		
+
 		$version = str_replace( '/', '', get_query_var( 'attachment' ) );
 		$count   = count( $children );
 		if ( $count <= $version || $version < 0 ) {
 			$this->message = 'version';
-			
+
 			return;
 		}
-		
+
 		if ( empty( $version ) || $count == 1 ) {
 			$attachment = array_shift( $children );
 		} else {
@@ -399,18 +401,18 @@ class RA_Document_Post_Type {
 		if ( empty( $document ) ) {
 			$this->message = 'none';
 			add_filter( 'the_content', array( &$this, 'the_content' ) );
-			
+
 			return;
 		}
-		
+
 		$uploads       = wp_upload_dir();
 		$document_file = trailingslashit( $uploads['basedir'] ) . $document;
 		if ( ! is_file( $document_file ) ) {
 			$this->message = 'none';
-			
+
 			return;
 		}
-		
+
 		// serve it up
 		$filename  = $this->base_name( $document );
 		$mime_type = 'application/octet-stream';
@@ -420,7 +422,7 @@ class RA_Document_Post_Type {
 		ob_clean();
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: ' . $mime_type );
-		header( "Content-Disposition: attachment; filename={$filename}" );
+		header( "Content-Disposition: inline; filename={$filename}" );
 		header( 'Content-Transfer-Encoding: binary' );
 		if ( false === strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS' ) ) {
 			header( 'Content-Length: ' . filesize( $document_file ) );
@@ -430,7 +432,7 @@ class RA_Document_Post_Type {
 		flush();
 		exit;
 	}
-	
+
 	/*
 	preserve uploaded document filename by adding a filename suffix
 	*/
@@ -438,44 +440,44 @@ class RA_Document_Post_Type {
 		$name         = strrev( $file['name'] );
 		$name         = preg_replace( '|^([^\.]+\.)|', '$1-', $name );
 		$file['name'] = strrev( $name );
-		
+
 		return $file;
 	}
-	
+
 	/*
 	clean up attachment revisions when a document post is deleted
 	*/
 	function delete_post( $post_id ) {
 		global $wpdb;
-		
+
 		if ( ! ( $post = get_post( $post_id ) ) || $post->post_type != $this->post_type_name ) {
 			return;
 		}
-		
+
 		$attachments = $this->get_child_documents( $post_id );
 		if ( empty( $attachments ) ) {
 			return;
 		}
-		
+
 		$ids = array();
 		foreach ( $attachments as $a ) {
 			$ids[] = $a->attachment_id;
 		}
-		
+
 		$attachments = implode( ',', $ids );
 		$wpdb->query( "UPDATE {$wpdb->posts} SET post_type = 'attachment', post_status = 'trash' WHERE post_type = 'document_file' AND ID IN ({$attachments})" );
 		foreach ( $ids as $id ) {
 			wp_delete_attachment( $id, true );
 		}
 	}
-	
+
 	/*
 	replace the built in revision metabox with our custom one
 	*/
 	function admin_menu() {
 		add_action( 'do_meta_boxes', array( &$this, 'add_metabox' ), 9 );
 	}
-	
+
 	function add_metabox() {
 		global $post;
 		if ( empty( $post ) || $this->post_type_name != $post->post_type ) {
@@ -484,7 +486,7 @@ class RA_Document_Post_Type {
 		if ( $this->attachments === null ) {
 			$this->attachments = $this->get_child_documents( $post->ID, true );
 		}
-		
+
 		if ( ! empty( $this->attachments ) ) {
 			add_meta_box( $this->handle, __( 'Document Versions', 'document-repository' ), array(
 				&$this,
@@ -493,17 +495,17 @@ class RA_Document_Post_Type {
 			remove_meta_box( 'revisionsdiv', $this->post_type_name, 'normal' );
 		}
 	}
-	
+
 	/*
 	custom revision metabox - show attachments & make current function
 	*/
 	function document_metabox() {
 		global $post;
-		
+
 		$titlef    = _x( '%1$s by %2$s', 'post revision' );
 		$revisions = wp_get_post_revisions( $post->ID );
 		krsort( $revisions );
-		
+
 		echo '<ul>';
 		$current = null;
 		if ( ( $version = count( $this->attachments ) ) ) {
@@ -517,7 +519,7 @@ class RA_Document_Post_Type {
 			if ( empty( $current ) && ! empty( $this->attachments ) ) {
 				$current = array_shift( $this->attachments );
 			}
-			
+
 			$date = wp_post_revision_title( $r->ID );
 			$name = get_the_author_meta( 'display_name', $r->post_author );
 			echo '<li>';
@@ -535,29 +537,29 @@ class RA_Document_Post_Type {
 		}
 		echo '</ul>';
 	}
-	
+
 	/*
 	make the selected document the current version
 	*/
 	function make_current() {
 		global $wpdb;
-		
+
 		$post_id       = isset( $_GET['post_id'] ) ? (int) $_GET['post_id'] : 0;
 		$attachment_id = isset( $_GET['attachment_id'] ) ? (int) $_GET['attachment_id'] : 0;
 		if ( ! $post_id || ! $attachment_id ) {
 			return;
 		}
-		
+
 		$post = get_post( $post_id );
 		if ( empty( $post ) || $post->post_type != $this->post_type_name ) {
 			return;
 		}
-		
+
 		$attachment = get_post( $attachment_id );
 		if ( empty( $attachment ) || $attachment->post_type != 'document_file' ) {
 			return;
 		}
-		
+
 		$attachments = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'document_file' and post_parent = %d", $post->ID ) );
 		if ( ! empty( $attachments ) ) {
 			$revision = wp_save_post_revision( $post->ID );
@@ -571,28 +573,28 @@ class RA_Document_Post_Type {
 		// redirect
 		wp_redirect( wp_get_referer() );
 	}
-	
+
 	/*
 	remove suffix from uploaded file name
 	*/
 	function base_name( $filename = '' ) {
 		$filename = strrev( basename( $filename ) );
 		$filename = preg_replace( '|^([^\.]+)\.[0-9]*\-|', '$1.', $filename );
-		
+
 		return strrev( $filename );
 	}
-	
+
 	/*
 	get a list of document post type revisions with attachments
 	*/
 	function get_child_documents( $post_id, $sorted = false ) {
 		global $wpdb;
 		$children = $wpdb->get_results( $wpdb->prepare( "SELECT r.*,a.ID as attachment_id FROM {$wpdb->posts} a JOIN {$wpdb->posts} r ON a.post_parent = r.ID WHERE a.post_type = 'document_file' AND (r.ID = %d OR (r.post_type = 'revision' AND r.post_parent = %d))", $post_id, $post_id ) );
-		
+
 		if ( ! $sorted || empty( $children ) ) {
 			return $children;
 		}
-		
+
 		$documents = array();
 		foreach ( (array) $children as $v ) {
 			if ( $v->post_status == 'publish' ) {
@@ -603,25 +605,25 @@ class RA_Document_Post_Type {
 			if ( preg_match( '|[0-9]+\-revision\-([0-9]+)|', $v->post_name, $m ) ) {
 				$revision = 100000000 + $m[1];
 			} //more than 99,999,999 revisions of a document will have an issue
-			
+
 			$documents[ $revision ] = $v;
 		}
 		krsort( $documents, SORT_STRING );
-		
+
 		return $documents;
 	}
-	
+
 	/*
 	custom messages for the document post type
 	*/
 	function post_updated_messages( $messages ) {
-		
+
 		global $post, $post_ID;
-		
+
 		if ( empty( $post ) || empty( $post_ID ) ) {
 			return $messages;
 		}
-		
+
 		$messages['umw_document'] = array(
 			1  => sprintf( __( 'Document updated. <a href="%s">View document</a>', 'document-repository' ), esc_url( get_permalink( $post_ID ) ) ),
 			4  => __( 'Document updated.', 'document-repository' ),
@@ -633,11 +635,11 @@ class RA_Document_Post_Type {
 				date_i18n( __( 'M j, Y @ G:i', 'document-repository' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
 			10 => sprintf( __( 'Document draft updated. <a target="_blank" href="%s">Preview document</a>', 'document-repository' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
 		);
-		
+
 		return $messages;
-		
+
 	}
-	
+
 	/*
 	add document post type rewrite rules on activation
 	*/
@@ -645,73 +647,73 @@ class RA_Document_Post_Type {
 		if ( ! post_type_exists( $this->post_type_name ) ) {
 			$this->init();
 		}
-		
+
 		flush_rewrite_rules();
 	}
-	
+
 	/*
 	override the defualt rewrite rules for the document post type
 	*/
 	function umw_document_rewrite_rules( $rules ) {
 		global $wp_rewrite;
-		
+
 		$base_struct = ltrim( str_replace( "%{$this->post_type_name}%", '', $wp_rewrite->get_extra_permastruct( $this->post_type_name ) ), '/' );
-		
+
 		return array(
 			$base_struct . '([^/]+)(/[0-9]+)?/?$'         => 'index.php?umw_document=$matches[1]&page=$matches[2]',
 			$base_struct . '([^/]+)/version(/[0-9]+)?/?$' => 'index.php?umw_document=$matches[1]&attachment=$matches[2]'
 		);
 	}
-	
+
 	/*
 	one single document posts, the_content is only called when the requested document does not exist (no attachment or non-existent version)
 	depending on the situation add information to the content
 	*/
 	function the_content( $content ) {
 		global $post;
-		
+
 		if ( $post->post_type != $this->post_type_name ) {
 			return $content;
 		}
-		
+
 		$messages = array(
 			'none'    => __( 'Document not available', 'document-repository' ),
 			'version' => sprintf( __( 'The version you requested is not available - <a href="%s">Download the current version</a>', 'document-repository' ), get_permalink() )
 		);
-		
+
 		if ( ! empty( $this->message ) && ! empty( $messages[ $this->message ] ) ) {
 			return '<h4>' . $messages[ $this->message ] . '</h4>' . $content;
 		}
-		
+
 		if ( $this->media_library ) {
 			return $content;
 		}
-		
+
 		return $content . '<h4><a href="' . get_permalink() . '" title="' . get_the_title() . '">' . __( 'Download', 'document-repository' ) . '</a></h4>';
 	}
-	
+
 	function media_buttons() {
 		global $wp_version, $typenow;
 		if ( ! isset( $typenow ) || $typenow != 'umw_document' || version_compare( $wp_version, '3.5', '<' ) ) {
 			return;
 		}
-		
+
 		$post = get_post();
 		if ( ! $post && ! empty( $GLOBALS['post_ID'] ) ) {
 			$post = $GLOBALS['post_ID'];
 		}
-		
+
 		$post_id = is_numeric( $post ) ? $post : $post->ID;
 		?>
         <a href='media-upload.php?post_id=<?php echo $post_id; ?>&#038;TB_iframe=1' id='add_media' class='thickbox'
            title='Add Media'><img src='images/media-button-other.gif?ver=20100531' alt='Add Media'
                                   onclick='return false;'/></a>
         <script type="text/javascript">
-			//<!--
-			jQuery(document).ready(function () {
-				jQuery('#add_media').siblings('a.add_media').hide();
-			});
-			//-->
+            //<!--
+            jQuery(document).ready(function () {
+                jQuery('#add_media').siblings('a.add_media').hide();
+            });
+            //-->
         </script>
 		<?php
 	}

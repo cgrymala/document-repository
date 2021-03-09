@@ -276,6 +276,13 @@ class RA_Document_User_Roles {
 			return array( 'edit_posts' );
 		}
 
+		if ( 5451 == $user_id ) {
+		    print( '<pre><code>' );
+		    var_dump( $user );
+		    print( '</code></pre>' );
+		    wp_die( 'Done' );
+        }
+
 		if ( ! empty( $user->doc_role ) && $user->has_cap( 'edit_others_posts' ) ) {
 			$author_id = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key = 'doc_role' AND meta_value = %s", $post->post_author, $user->doc_role ) );
 			if ( ! empty( $author_id ) ) {
