@@ -13,8 +13,8 @@ class RA_Document_Extras {
 	 * Holds the class instance.
 	 *
 	 * @since   0.5
-	 * @access	private
-	 * @var		\RA_Document_Extras
+	 * @access    private
+	 * @var        \RA_Document_Extras
 	 */
 	private static $instance;
 
@@ -22,14 +22,15 @@ class RA_Document_Extras {
 	 * Returns the instance of this class.
 	 *
 	 * @access  public
+	 * @return    \RA_Document_Extras
 	 * @since   0.5
-	 * @return	\RA_Document_Extras
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
-			$className = __CLASS__;
+			$className      = __CLASS__;
 			self::$instance = new $className;
 		}
+
 		return self::$instance;
 	}
 
@@ -75,21 +76,29 @@ class RA_Document_Extras {
 			return;
 		}
 
-		if ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) &&
-             ( ! defined( 'RA_DOCUMENT_REPO' ) || ! is_numeric( 'RA_DOCUMENT_REPO' ) ) ) {
+		/*if ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) &&
+		     ( ! defined( 'RA_DOCUMENT_REPO' ) || ! is_numeric( 'RA_DOCUMENT_REPO' ) ) ) {
 		    return;
-        }
+		}*/
 
 		$user = get_current_user();
-		if ( empty( $user->doc_role ) &&
-             ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || ! current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) &&
-             ! current_user_can( 'manage_options' ) ) {
-			return;
+		if ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) &&
+		     ( ! defined( 'RA_DOCUMENT_REPO' ) || ! is_numeric( 'RA_DOCUMENT_REPO' ) ) ) {
+		    if ( ! current_user_can( 'edit_private_pages' ) ) {
+		        return;
+            }
+		} else {
+			if ( empty( $user->doc_role ) &&
+			     ( ! defined( 'RA_DOCUMENT_REPO_BLOG_ID' ) || ! current_user_can_for_blog( 'manage_options', RA_DOCUMENT_REPO_BLOG_ID ) ) &&
+			     ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
 		}
 
-		$wp_admin_bar->add_menu( array( 'id'    => 'umw',
-										'title' => __( 'Document Admin', 'document-repository' ),
-										'href'  => RA_DOCUMENT_REPO_URL . '/wp-admin/edit.php?post_type=umw_document'
+		$wp_admin_bar->add_menu( array(
+			'id'    => 'umw',
+			'title' => __( 'Document Admin', 'document-repository' ),
+			'href'  => RA_DOCUMENT_REPO_URL . '/wp-admin/edit.php?post_type=umw_document'
 		) );
 	}
 
@@ -146,39 +155,39 @@ class RA_Document_Extras {
 	}
 
 	function admin_head_document() { ?>
-		<style type="text/css">
-			#document-media-library, #document-media-library .widget {
-				padding: 5px;
-			}
+        <style type="text/css">
+            #document-media-library, #document-media-library .widget {
+                padding: 5px;
+            }
 
-			#document-media-library .widget .media-library, #document-media-library .widget .media-library-extras {
-				float: left;
-				width: 48%;
-			}
+            #document-media-library .widget .media-library, #document-media-library .widget .media-library-extras {
+                float: left;
+                width: 48%;
+            }
 
-			#document-media-library .widget .media-library-extras {
-				float: right;
-			}
+            #document-media-library .widget .media-library-extras {
+                float: right;
+            }
 
-			#document-media-library .widget input[type=submit] {
-				margin: 10px 0 10px 50px;
-			}
+            #document-media-library .widget input[type=submit] {
+                margin: 10px 0 10px 50px;
+            }
 
-			#document-media-library .ml-post {
-				border-bottom: 1px solid #dfdfdf;
-				padding: 8px;
-				margin: 0;
-			}
+            #document-media-library .ml-post {
+                border-bottom: 1px solid #dfdfdf;
+                padding: 8px;
+                margin: 0;
+            }
 
-			#document-media-library span.doc-terms {
-				margin: 0 6px 6px 0;
-			}
+            #document-media-library span.doc-terms {
+                margin: 0 6px 6px 0;
+            }
 
-			#document-media-library .tablenav form {
-				display: inline;
-			}
-		</style>
-		<script type="text/javascript"
-				src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'js/media.js?ver=' . RA_DOCUMENT_REPO_VERSION; ?>"></script>
+            #document-media-library .tablenav form {
+                display: inline;
+            }
+        </style>
+        <script type="text/javascript"
+                src="<?php echo plugin_dir_url( dirname( __FILE__ ) ) . 'js/media.js?ver=' . RA_DOCUMENT_REPO_VERSION; ?>"></script>
 	<?php }
 }
