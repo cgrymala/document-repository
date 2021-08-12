@@ -162,7 +162,7 @@ class RA_Document_Post_Type {
 		}
 
 		if ( $domain ) {
-			header( 'Access-Control-Allow-Origin: http://' . $domain );
+			header( 'Access-Control-Allow-Origin: https://' . $domain );
 		}
 
 		$vars = array( 'post_type' => $this->post_type_name );
