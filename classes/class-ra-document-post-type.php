@@ -390,6 +390,10 @@ class RA_Document_Post_Type {
 		            wp_die( 'Looks like the redirect is empty, so we would normally start downloading the document.' );
 		        }
 		    }
+		} else {
+		    if ( current_user_can( 'delete_users' ) ) {
+		        wp_die( 'Did not find Page Links To class' );
+		    }
 		}
 
 		$children = $this->get_child_documents( $object->ID, true );
