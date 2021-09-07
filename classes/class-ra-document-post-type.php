@@ -381,11 +381,10 @@ class RA_Document_Post_Type {
 
 		$object = get_queried_object();
 		if ( $object->post_type != $this->post_type_name || ! property_exists( $object, 'ID' ) ) {
-		    $this->debug( 'This is not a document post type' );
 			return;
 		}
 
-		if ( class_exists( 'CWS_PageLinksTo ' ) ) {
+		if ( class_exists( 'CWS_PageLinksTo' ) ) {
 		    $plt = CWS_PageLinksTo::get_instance();
 		    $is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
 
