@@ -389,13 +389,8 @@ class RA_Document_Post_Type {
 		    $is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
 
 		    if ( ! empty( $is_redirected ) ) {
-	            $this->debug( 'Looks like the redirect is not empty. It looks like: ' . $is_redirected );
 		        return;
-		    } else {
-	            $this->debug( 'Looks like the redirect is empty, so we would normally start downloading the document.' );
 		    }
-		} else {
-	        $this->debug( 'Did not find Page Links To class' );
 		}
 
 		$children = $this->get_child_documents( $object->ID, true );
