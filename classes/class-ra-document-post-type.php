@@ -362,14 +362,18 @@ class RA_Document_Post_Type {
 		exit;
 	}
 
+	function debug( $message ) {
+	    if ( ! current_user_can( 'delete_users' ) ) {
+	        return;
+	    }
+
+	    wp_die( $message );
+	}
+
 	/*
 	handle document permalink request
 	*/
 	function wp() {
-		if ( current_user_can( 'delete_users' ) ) {
-			wp_die( 'Got this far' );
-		}
-
 		global $wpdb;
 		if ( is_admin() || ! is_singular() ) {
 			return;
@@ -377,6 +381,7 @@ class RA_Document_Post_Type {
 
 		$object = get_queried_object();
 		if ( $object->post_type != $this->post_type_name || ! property_exists( $object, 'ID' ) ) {
+		    $this->debug( 'This is not a document post type' );
 			return;
 		}
 
@@ -385,19 +390,13 @@ class RA_Document_Post_Type {
 		    $is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
 
 		    if ( ! empty( $is_redirected ) ) {
-		        if ( current_user_can( 'delete_users' ) ) {
-		            wp_die( 'Looks like the redirect is not empty. It looks like: ' . $is_redirected );
-		        }
+	            $this->debug( 'Looks like the redirect is not empty. It looks like: ' . $is_redirected );
 		        return;
 		    } else {
-		        if ( current_user_can( 'delete_users' ) ) {
-		            wp_die( 'Looks like the redirect is empty, so we would normally start downloading the document.' );
-		        }
+	            $this->debug( 'Looks like the redirect is empty, so we would normally start downloading the document.' );
 		    }
 		} else {
-		    if ( current_user_can( 'delete_users' ) ) {
-		        wp_die( 'Did not find Page Links To class' );
-		    }
+	        $this->debug( 'Did not find Page Links To class' );
 		}
 
 		$children = $this->get_child_documents( $object->ID, true );
