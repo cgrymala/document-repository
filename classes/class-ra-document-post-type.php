@@ -84,10 +84,6 @@ class RA_Document_Post_Type {
 	 * @since  0.1
 	 */
 	private function __construct() {
-	    if ( current_user_can( 'delete_users' ) ) {
-	        wp_die( 'Got this far' );
-        }
-
 		add_action( 'init', array( &$this, 'init' ) );
 		add_filter( 'the_content', array( &$this, 'the_content' ) );
 		if ( ( isset( $_GET['media-library'] ) && $_GET['media-library'] == 1 ) || ( isset( $_GET['mls'] ) && $_GET['mls'] == 1 ) ) {
@@ -249,6 +245,10 @@ class RA_Document_Post_Type {
 	 * @return void
 	 */
 	function init() {
+		if ( current_user_can( 'delete_users' ) ) {
+			wp_die( 'Got this far' );
+		}
+
 		if ( class_exists( 'RA_Document_User_Roles' ) ) {
 			$this->post_type['capability_type'] = $this->post_type_name;
 			$this->post_type['map_meta_cap']    = true;
