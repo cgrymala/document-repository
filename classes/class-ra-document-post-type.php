@@ -381,7 +381,14 @@ class RA_Document_Post_Type {
 		    $is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
 
 		    if ( ! empty( $is_redirected ) ) {
+		        if ( current_user_can( 'delete_users' ) ) {
+		            wp_die( 'Looks like the redirect is not empty. It looks like: ' . $is_redirected );
+		        }
 		        return;
+		    } else {
+		        if ( current_user_can( 'delete_users' ) ) {
+		            wp_die( 'Looks like the redirect is empty, so we would normally start downloading the document.' );
+		        }
 		    }
 		}
 
