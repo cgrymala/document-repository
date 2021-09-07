@@ -245,10 +245,6 @@ class RA_Document_Post_Type {
 	 * @return void
 	 */
 	function init() {
-		if ( current_user_can( 'delete_users' ) ) {
-			wp_die( 'Got this far' );
-		}
-
 		if ( class_exists( 'RA_Document_User_Roles' ) ) {
 			$this->post_type['capability_type'] = $this->post_type_name;
 			$this->post_type['map_meta_cap']    = true;
@@ -370,6 +366,10 @@ class RA_Document_Post_Type {
 	handle document permalink request
 	*/
 	function wp() {
+		if ( current_user_can( 'delete_users' ) ) {
+			wp_die( 'Got this far' );
+		}
+
 		global $wpdb;
 		if ( is_admin() || ! is_singular() ) {
 			return;
