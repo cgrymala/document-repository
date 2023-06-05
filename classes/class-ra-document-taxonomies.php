@@ -97,12 +97,12 @@ class RA_Document_Taxonomies {
 
 			register_taxonomy( $tax, array( $ra_document_library->post_type_name ), $args );
 		}
-		add_action( 'document_search_widget', array( 'RA_Document_taxonomies', 'document_search_widget' ) );
-		add_action( 'save_post', array( 'RA_Document_taxonomies', 'save_post' ), 10, 2 );
-		add_filter( 'post_updated_messages', array( 'RA_Document_taxonomies', 'post_updated_messages' ), 12 );
-		add_filter( 'the_content', array( 'RA_Document_taxonomies', 'the_content' ), 9 );
-		add_filter( 'document_search_query_vars', array( 'RA_Document_taxonomies', 'document_search_query_vars' ) );
-		add_filter( 'ra-document-search-taxonomies', array( 'RA_Document_Taxonomies', 'document_search_query_vars' ) );
+		add_action( 'document_search_widget', array( $this, 'document_search_widget' ) );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+		add_filter( 'post_updated_messages', array( $this, 'post_updated_messages' ), 12 );
+		add_filter( 'the_content', array( $this, 'the_content' ), 9 );
+		add_filter( 'document_search_query_vars', array( $this, 'document_search_query_vars' ) );
+		add_filter( 'ra-document-search-taxonomies', array( $this, 'document_search_query_vars' ) );
 
 		return true;
 	}

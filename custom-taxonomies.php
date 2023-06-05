@@ -30,6 +30,6 @@ if ( ! class_exists( 'RA_Document_Taxonomies' ) ) {
 	require_once( plugin_dir_path( __FILE__ ) . '/classes/class-ra-document-taxonomies.php' );
 }
 
-add_action( 'init', array( 'RA_Document_taxonomies', 'init' ), 12 );
+add_action( 'init', array( RA_Document_taxonomies::instance(), 'init' ), 12 );
 
-register_activation_hook( __FILE__, array( 'RA_Document_Taxonomies', 'rewrite_flush' ) );
+register_activation_hook( __FILE__, array( RA_Document_Taxonomies::instance(), 'rewrite_flush' ) );
