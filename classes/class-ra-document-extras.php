@@ -37,7 +37,7 @@ class RA_Document_Extras {
 	/*
 	load text domain
 	*/
-	function plugins_loaded() {
+	static function plugins_loaded() {
 		if ( ! class_exists( 'RA_Document_Post_Type' ) ) {
 			load_plugin_textdomain( 'document-repository', false, '/languages/' );
 		}
@@ -46,7 +46,7 @@ class RA_Document_Extras {
 	/*
 	enqueue script for the edit post area
 	*/
-	function admin_init() {
+	static function admin_init() {
 
 		global $wp_version, $pagenow;
 
@@ -69,7 +69,7 @@ class RA_Document_Extras {
 	/*
 	add the admin bar menu item
 	*/
-	function admin_bar_menu() {
+	static function admin_bar_menu() {
 		global $wp_admin_bar;
 
 		if ( ! is_admin() || ! is_admin_bar_showing() ) {
@@ -105,7 +105,7 @@ class RA_Document_Extras {
 	/*
 	load the front end of the document repository in the edit post media popup to allow inserting links to documents into posts
 	*/
-	function media_upload_document() {
+	static function media_upload_document() {
 		wp_iframe( 'ra_media_document_callback' );
 		exit;
 	}
@@ -113,13 +113,13 @@ class RA_Document_Extras {
 	/*
 	add the document media button to the media button row in the post editor
 	*/
-	function media_buttons( $editor ) {
+	static function media_buttons( $editor ) {
 
 		printf( '<span class="ra-document-library-%s">%s</span>', sanitize_html_class( $editor ), self::media_buttons_context( '' ) );
 
 	}
 
-	function media_buttons_context( $context ) {
+	static function media_buttons_context( $context ) {
 
 		global $typenow, $wp_version;
 		if ( $typenow == 'umw_document' ) {
@@ -154,7 +154,7 @@ class RA_Document_Extras {
 
 	}
 
-	function admin_head_document() { ?>
+	static function admin_head_document() { ?>
         <style type="text/css">
             #document-media-library, #document-media-library .widget {
                 padding: 5px;
