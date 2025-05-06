@@ -363,11 +363,11 @@ class RA_Document_Post_Type {
 	}
 
 	function debug( $message ) {
-	    if ( ! current_user_can( 'delete_users' ) ) {
-	        return;
-	    }
+		if ( ! current_user_can( 'delete_users' ) ) {
+			return;
+		}
 
-	    wp_die( $message );
+		wp_die( $message );
 	}
 
 	/*
@@ -385,15 +385,17 @@ class RA_Document_Post_Type {
 		}
 
 		if ( class_exists( 'CWS_PageLinksTo' ) ) {
-		    $plt = CWS_PageLinksTo::get_instance();
-		    $is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
+			$plt           = CWS_PageLinksTo::get_instance();
+			$is_redirected = $plt::get_post_meta( $object->ID, $plt::LINK_META_KEY );
 
-		    if ( ! empty( $is_redirected ) ) {
-		        return;
-		    }
+			if ( ! empty( $is_redirected ) ) {
+				return;
+			}
 		}
 
 		$children = $this->get_child_documents( $object->ID, true );
+		do_action( 'qm/info', $children );
+
 		if ( empty( $children ) ) {
 			$this->message = 'none';
 
@@ -402,7 +404,13 @@ class RA_Document_Post_Type {
 
 		$version = str_replace( '/', '', get_query_var( 'attachment' ) );
 		$count   = count( $children );
-		if ( $count <= $version || $version < 0 ) {
+		do_action( 'qm/info', __( 'Checking version {version} against count {count}', 'document-repository' ),
+			array(
+				'version' => $version,
+				'count'   => $count,
+			)
+		);
+		if ( $count < intval( $version ) || intval( $version ) < 0 ) {
 			$this->message = 'version';
 
 			return;
@@ -410,9 +418,16 @@ class RA_Document_Post_Type {
 
 		if ( empty( $version ) || $count == 1 ) {
 			$attachment = array_shift( $children );
+			do_action( 'qm/info', __( 'Taking the most recent version: {attachment}', 'document-repository' ), array(
+				'attachment' => $attachment,
+			) );
 		} else {
 			$child      = array_slice( $children, $count - $version, 1 );
 			$attachment = array_shift( $child );
+			do_action( 'qm/info', __( 'Taking version {version}: {attachment}', 'document-repository' ), array(
+				'version'    => $version,
+				'attachment' => $attachment,
+			) );
 		}
 		$document = get_post_meta( $attachment->attachment_id, '_wp_attached_file', true );
 		if ( empty( $document ) ) {
@@ -441,7 +456,7 @@ class RA_Document_Post_Type {
 		header( 'Content-Type: ' . $mime_type );
 		header( "Content-Disposition: inline; filename={$filename}" );
 		header( 'Content-Transfer-Encoding: binary' );
-		if ( false === strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS' ) ) {
+		if ( ! str_contains( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS' ) ) {
 			header( 'Content-Length: ' . filesize( $document_file ) );
 		}
 		flush();
@@ -519,38 +534,32 @@ class RA_Document_Post_Type {
 	function document_metabox() {
 		global $post;
 
-		$titlef    = _x( '%1$s by %2$s', 'post revision' );
-		$revisions = wp_get_post_revisions( $post->ID );
-		krsort( $revisions );
+		$titlef = _x( '%1$s by %2$s', 'post revision' );
 
 		echo '<ul>';
-		$current = null;
-		if ( ( $version = count( $this->attachments ) ) ) {
-			$permalink = get_permalink();
-			$current   = array_shift( $this->attachments );
-			$datef     = _x( 'j F, Y @ G:i', 'revision date format' );
-			printf( __( '<li>%s / Current Version: %d - <a href="%s">%s</a></li>', 'document-repository' ), date_i18n( $datef, strtotime( $current->post_modified ) ), $version --, $permalink, $this->base_name( get_post_meta( $current->attachment_id, '_wp_attached_file', true ) ) );
-			unset( $current );
-		}
-		foreach ( $revisions as $r ) {
-			if ( empty( $current ) && ! empty( $this->attachments ) ) {
-				$current = array_shift( $this->attachments );
-			}
+		$current   = null;
+		$version   = count( $this->attachments );
+		$permalink = get_permalink( $post->ID );
+		foreach ( $this->attachments as $r ) {
+			$doc = get_post( $r->attachment_id );
 
-			$date = wp_post_revision_title( $r->ID );
-			$name = get_the_author_meta( 'display_name', $r->post_author );
+			$date = $doc->post_date;
+			$name = get_the_author_meta( 'display_name', $doc->post_author );
 			echo '<li>';
 			printf( $titlef, $date, $name );
-			if ( ! empty( $current ) && $current->ID == $r->ID ) {
-				$version_link = $permalink . 'version/' . $version;
+			$version_link = $permalink . 'version/' . $version;
+			$file_name    = esc_html( $this->base_name( get_post_meta( $r->attachment_id, '_wp_attached_file', true ) ) );
+			/*if ( $version < count( $this->attachments ) ) {
 				$current_link = wp_nonce_url( add_query_arg( array(
 					'post_id'       => $post->ID,
-					'attachment_id' => $current->attachment_id
+					'attachment_id' => $r->attachment_id
 				), admin_url( 'index.php?ra-make-current=1' ) ), 'doc-make-current' );
-				$file_name    = esc_html( $this->base_name( get_post_meta( $current->attachment_id, '_wp_attached_file', true ) ) );
-				printf( __( ' / Version: %d - <a href="%s">Make document current</a> - <a href="%s">%s</a></li>', 'document-repository' ), $version --, $current_link, $version_link, $file_name );
+				printf( __( ' / Version: %d - <a href="%s">Make document current</a>', 'document-repository' ), $version, $current_link );
 				unset( $current );
-			}
+			}*/
+
+			$version --;
+			printf( ' - <a href="%s">%s</a></li>', $version_link, $file_name );
 		}
 		echo '</ul>';
 	}
@@ -614,18 +623,11 @@ class RA_Document_Post_Type {
 
 		$documents = array();
 		foreach ( (array) $children as $v ) {
-			if ( $v->post_status == 'publish' ) {
-				$documents['zzz'] = $v;
-				continue;
+			if ( $v->post_status == 'publish' || $v->post_status == 'inherit' ) {
+				$documents[ $v->attachment_id ] = $v;
 			}
-			$revision = 0;
-			if ( preg_match( '|[0-9]+\-revision\-([0-9]+)|', $v->post_name, $m ) ) {
-				$revision = 100000000 + $m[1];
-			} //more than 99,999,999 revisions of a document will have an issue
-
-			$documents[ $revision ] = $v;
 		}
-		krsort( $documents, SORT_STRING );
+		krsort( $documents, SORT_NUMERIC );
 
 		return $documents;
 	}
