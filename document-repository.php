@@ -41,9 +41,14 @@ if ( ! class_exists( 'RA_Document_Widget_Search' ) ) {
 	require_once plugin_dir_path( __FILE__ ) . '/classes/class-ra-document-widget-search.php';
 }
 
+if ( ! class_exists( 'RA_Document_Search_Shortcode' ) ) {
+	require_once plugin_dir_path( __FILE__ ) . '/classes/class-ra-document-search-shortcode.php';
+}
+
 function register_ra_document_search_widget() {
 	unregister_widget( 'WP_Widget_Search' );
 	register_widget( 'RA_Document_Widget_Search' );
+	RA_Document_Search_Shortcode::instance();
 }
 
 add_action( 'widgets_init', 'register_ra_document_search_widget' );

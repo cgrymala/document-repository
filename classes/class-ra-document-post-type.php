@@ -15,7 +15,7 @@ class RA_Document_Post_Type {
 	 * @access public
 	 * @var    string
 	 */
-	public $version = '0.5';
+	public string $version = '0.5';
 	/**
 	 * Holds the class instance.
 	 *
@@ -23,7 +23,7 @@ class RA_Document_Post_Type {
 	 * @access    private
 	 * @var        \RA_Document_Post_Type
 	 */
-	private static $instance;
+	private static RA_Document_Post_Type $instance;
 	/**
 	 * The slug to be used for the post type registration
 	 *
@@ -31,9 +31,9 @@ class RA_Document_Post_Type {
 	 * @access public
 	 * @var    string
 	 */
-	public $post_type_name = 'umw_document';
+	public string $post_type_name = 'umw_document';
 	var $attachments = null;
-	var $handle = 'umw-attachments';
+	var string $handle = 'umw-attachments';
 	var $message = null;
 	var $media_library = false;
 	var $js_class = '';
@@ -44,7 +44,7 @@ class RA_Document_Post_Type {
 	 * @access public
 	 * @var    array
 	 */
-	var $post_type = array(
+	var array $post_type = array(
 		'public'            => true,
 		'hierarchical'      => false,
 		'rewrite'           => array( 'slug' => 'document' ),
@@ -84,6 +84,9 @@ class RA_Document_Post_Type {
 	 * @since  0.1
 	 */
 	private function __construct() {
+        $this->clean_get_vars();
+
+
 		add_action( 'init', array( &$this, 'init' ) );
 		add_filter( 'the_content', array( &$this, 'the_content' ) );
 		if ( ( isset( $_GET['media-library'] ) && $_GET['media-library'] == 1 ) || ( isset( $_GET['mls'] ) && $_GET['mls'] == 1 ) ) {
@@ -108,7 +111,24 @@ class RA_Document_Post_Type {
 		load_plugin_textdomain( 'document-repository', false, '/languages/' );
 
 		$this->_fix_document_search();
+
+        if ( ! class_exists( 'RA_Document_List_Template' ) ) {
+            require_once dirname( __FILE__, 2 ) . '/templates/document-list.php';
+            RA_Document_List_Template::instance();
+        }
 	}
+
+	/**
+	 * Attempt to clean up GET vars that are empty
+	 */
+    private function clean_get_vars() {
+        $vars = array( 's', 'audience', 'division', 'process' );
+        foreach ( $vars as $var ) {
+	        if ( isset( $_GET[$var] ) && empty( $_GET[$var] ) ) {
+		        unset( $_GET[$var] );
+	        }
+        }
+    }
 
 	/**
 	 * Attempt to fix the empty search issues
